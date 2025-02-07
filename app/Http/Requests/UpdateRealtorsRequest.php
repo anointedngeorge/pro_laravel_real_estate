@@ -22,8 +22,15 @@ class UpdateRealtorsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => ['required', 'max:255'],
-            'last_name' => ['required', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'image' => ['nullable', 'file', 'image', 'mimes:png,jpg,jpeg', 'max:2048'],
+            'account_name' => ['nullable'],
+            'account_type' => ['nullable'],
+            'account_number' => ['nullable'],
+            'bank_name' => ['nullable'],
+            'address' => ['nullable'],
+            'country' => ['nullable'],
         ];
     }
 }

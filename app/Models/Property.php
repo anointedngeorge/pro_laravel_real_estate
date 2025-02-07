@@ -21,4 +21,19 @@ class Property extends Model
 
     /** @use HasFactory<\Database\Factories\PropertyFactory> */
     use HasFactory;
+
+    public function propertyClients()
+    {
+        return $this->hasManyThrough(
+            Client::class,
+            PropertySales::class,
+            'property_id',  // Foreign key on property_sales table
+            'id',           // Local key on clients table
+            'id',           // Local key on properties table
+            'client_id'     // Foreign key on property_sales table
+        )->distinct(); // Ensures unique clients
+    }
+
+   
+
 }

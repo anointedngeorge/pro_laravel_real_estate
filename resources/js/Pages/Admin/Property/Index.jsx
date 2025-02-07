@@ -153,6 +153,9 @@ export default function Property({ ...pageData }) {
                                                             <Link className='text-amber-500' href={route('property.show', property.id)}>View</Link>
                                                         </li>
                                                         <li>
+                                                            <Link className='text-white px-2 rounded-md py-2 even:odd:bg-amber-500 odd:bg-green-500' href={route('property.clients', property.id)}>List Clients</Link>
+                                                        </li>
+                                                        <li>
                                                             <button className='text-red-500' onClick={e => onDestroy(property)}>Delete</button>
                                                         </li>
                                                     </ul>

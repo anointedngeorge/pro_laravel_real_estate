@@ -56,10 +56,17 @@ export default function AuthenticatedLayout({ header, children }) {
                                     Properties
                                 </NavLink>
                                 <NavLink
-                                    href={route('propertysales.create')}
-                                    active={route().current('propertysales.create')}
+                                    href={route('propertysales.index')}
+                                    active={route().current('propertysales.index')}
                                 >
                                     Property Sales
+                                </NavLink>
+
+                                <NavLink
+                                    href={route('commission.index')}
+                                    active={route().current('commission.index')}
+                                >
+                                    Commissions
                                 </NavLink>
                             </div>
                         </div>

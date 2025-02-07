@@ -23,12 +23,12 @@ class StoreCommissionsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'propertysales_id' => ['required', 'exists:propertysales,id'],
+            'propertysales_id' => ['required', 'exists:property_sales,id'],
             'client_id' => ['required', 'exists:clients,id'],
             'amount_paid' => ['nullable', 'integer'],
-            'first_generation' => ['required', 'exists:realtors,id'],
-            'second_generation' => ['required', 'exists:realtors,id'],
-            'third_generation' => ['required', 'exists:realtors,id'],
+            'first_generation' => ['string', 'nullable'],
+            'second_generation' => ['string', 'nullable'],
+            'third_generation' => ['string', 'nullable'],
             'status' => ['nullable', Rule::in(['paid', 'Unpaid'])],
         ];
     }

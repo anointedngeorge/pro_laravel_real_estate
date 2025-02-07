@@ -2,8 +2,7 @@
 
 export function ViewData({ objects, exclude = '' }) {
     const excludeFields = exclude.split(',').map(field => field.trim());
-    console.log(excludeFields);
-    
+
     if (!objects) return null;
 
     return (

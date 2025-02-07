@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePropertyRequest;
 use App\Http\Requests\UpdatePropertyRequest;
+use App\Http\Resources\ClientResource;
 use App\Http\Resources\PropertyResource;
+use App\Http\Resources\PropertySalesResource;
 use App\Models\Property;
 use Request;
 use Storage;
@@ -94,4 +96,40 @@ class PropertyController extends Controller
         $property->delete();
         return to_route('property.index')->with('message', "Property $name was deleted.");
     }
+
+
+    // 
+
+    public function propertyClients(Property $property)
+    {
+        // Fetch unique clients and their related sales for this property
+        $clients = $property->propertyClients()->with([
+            'propertySales' => function ($query) use ($property) {
+                $query->where('property_id', $property->id); // Ensure we fetch only relevant sales
+            }
+        ])->get();
+
+        return inertia('Admin/Property/ListClients', [
+            'property' => new PropertyResource($property),
+            'clients' => $clients->map(function ($client) {
+                return [
+                    'id' => $client->id,
+                    'fullname' => $client->fullname(),
+
+                    'property_sales' => $client->propertySales->map(function ($sale) {
+                        return [
+                            'id' => $sale->id,
+                            'quantity' => $sale->quantity,
+                            'amount' => $sale->amount,
+                            'initial_amount_paid' => $sale->initial_amount_paid,
+                            'property' => new PropertyResource($sale->whichproperty),
+                            'date' => $sale->created_at->format('Y-m-d'),
+                        ];
+                    }),
+                ];
+            }),
+        ]);
+    }
+
+
 }

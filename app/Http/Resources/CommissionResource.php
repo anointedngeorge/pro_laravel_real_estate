@@ -2,33 +2,34 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Validation\Rule;
 
-class PropertySalesResource extends JsonResource
+class CommissionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
+
     public static $wrap = false;
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
-            'property_id' => new PropertyResource($this->whichproperty),
+            'property_sale_id' => new PropertySalesResource($this->propertysales),
             'client_id' => new ClientResource($this->propertyclient),
-            'quantity' => $this->quantity,
-            'amount' => $this->amount,
-            'initial_amount_paid' => $this->initial_amount_paid,
+            'amount_paid' => $this->amount_paid,
             'first_generation_commission' => $this->first_generation_commission,
             'second_generation_commission' => $this->second_generation_commission,
             'third_generation_commission' => $this->third_generation_commission,
-            'first_generation' => new RealtorsResource($this->firstgen),
-            'second_generation' => new RealtorsResource($this->secondgen),
-            'third_generation' => new RealtorsResource($this->thirdgen),
-            'sponsor_code' => $this->sponsor_code,
+            'status' => $this->status,
+            'created_at' => (new Carbon($this->created_at))->format('Y-m-d'),
+            'updated_at' => (new Carbon($this->due_date))->format('Y-m-d'),
+
         ];
     }
 }

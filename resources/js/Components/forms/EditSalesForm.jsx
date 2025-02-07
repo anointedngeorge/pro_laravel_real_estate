@@ -13,7 +13,7 @@ import { MoneyFormat } from '@/Functions';
 
 
 
-export function CreateSalesForm({
+export function EditSalesForm({
     pageData
 }) {
 
@@ -52,7 +52,7 @@ export function CreateSalesForm({
         e.preventDefault();
         console.log(data);
 
-        post(route('propertysales.store'))
+        post(route('propertysales.update', object.id))
     }
 
     const fetchSponsor = async (code) => {
@@ -122,7 +122,11 @@ export function CreateSalesForm({
                             >
                                 <option value="">Select Property</option>
                                 {pageData.propertities.data.map((item) => (
-                                    <option value={item.id} key={`property_${item.id}`}>{item.name}</option>
+                                    <option
+                                        selected={pageData.propertysales.id == item.id ? true : false}
+                                        value={item.id} key={`property_${item.id}`}>
+                                        {item.name}
+                                    </option>
                                 ))}
                             </SelectInput>
                             <InputError message={errors.property_id} className="mt-2" />
@@ -133,15 +137,19 @@ export function CreateSalesForm({
                                 htmlFor="client_listing"
                                 value="Choose Client"
                             />
+                            <pre>
+
+                            </pre>
                             <SelectInput
                                 id="client_listing"
                                 className="mt-1 block w-full"
                                 required={true}
                                 onChange={(e) => setData("client_id", e.target.value)}
                             >
-                                <option value="">Select Clients</option>
+
+                                <option value="">Select Clients {pageData.propertities.client_id}</option>
                                 {pageData.clients.data.map((item) => (
-                                    <option value={item.id} key={`client_${item.id}`}>{item.fullname}</option>
+                                    <option selected={pageData.propertysales.client_id.id == item.id ? true : false} value={item.id} key={`client_${item.id}`}>{item.fullname}</option>
                                 ))}
                             </SelectInput>
                             <InputError message={errors.client_id} className="mt-2" />
@@ -156,7 +164,7 @@ export function CreateSalesForm({
                                 id="amount"
                                 type="number"
                                 required={true}
-
+                                defaultValue={pageData.propertysales.amount}
                                 className="mt-1 block w-full"
                                 onKeyUp={(e) => setData("amount", e.target.value)}
                             />
@@ -172,7 +180,7 @@ export function CreateSalesForm({
                                 id="initial_amount_paid"
                                 type="number"
                                 required={true}
-
+                                defaultValue={pageData.propertysales.initial_amount_paid}
                                 className="mt-1 block w-full"
                                 onKeyUp={(e) => setData("initial_amount_paid", e.target.value)}
                             />
@@ -188,7 +196,7 @@ export function CreateSalesForm({
                                 id="quantity"
                                 type="number"
                                 required={true}
-
+                                defaultValue={pageData.propertysales.quantity}
                                 className="mt-1 block w-full"
                                 onKeyUp={(e) => setData("quantity", e.target.value)}
                             />
@@ -205,10 +213,12 @@ export function CreateSalesForm({
                             <TextInput
                                 id="sponsor"
                                 type="text"
+
                                 required={true}
                                 placeholder='Sponsor Code'
                                 onKeyUp={e => fetchSponsor(e.target.value)}
                                 className="mt-1 block w-full"
+                                defaultValue={pageData.propertysales.sponsor_code}
                                 onChange={(e) => setData("sponsor_code", e.target.value)}
                             />
                             <InputError message={errors.sponsor_code} className="mt-2" />
@@ -225,7 +235,11 @@ export function CreateSalesForm({
                                 onChange={(e) => setData("first_generation_commission", e.target.value)}
                             >
                                 {[0, 15, 8, 5].map((item) => (
-                                    <option value={item} key={`first_gen_${item}`}>{`${item}%`}</option>
+                                    <option
+                                        selected={pageData.propertysales.first_generation_commission == item ? true : false}
+                                        value={item} key={`first_gen_${item}`}>
+                                        {`${item}%`}
+                                    </option>
                                 ))}
                             </SelectInput>
                             <InputError message={errors.first_generation_commission} className="mt-2" />
@@ -242,7 +256,11 @@ export function CreateSalesForm({
                                 onChange={(e) => setData("second_generation_commission", e.target.value)}
                             >
                                 {[0, 8, 5, 1].map((item) => (
-                                    <option value={item} key={`second_gen_${item}`}>{`${item}%`}</option>
+                                    <option
+                                        selected={pageData.propertysales.second_generation_commission == item ? true : false}
+                                        value={item} key={`first_gen_${item}`}>
+                                        {`${item}%`}
+                                    </option>
                                 ))}
                             </SelectInput>
                             <InputError message={errors.second_generation_commission} className="mt-2" />
@@ -259,7 +277,11 @@ export function CreateSalesForm({
                                 onChange={(e) => setData("third_generation_commission", e.target.value)}
                             >
                                 {[0, 15, 8, 5].map((item) => (
-                                    <option value={item} key={`third_gen_${item}`}>{`${item}%`}</option>
+                                    <option
+                                        selected={pageData.propertysales.third_generation_commission == item ? true : false}
+                                        value={item} key={`first_gen_${item}`}>
+                                        {`${item}%`}
+                                    </option>
                                 ))}
                             </SelectInput>
                             <InputError message={errors.third_generation_commission} className="mt-2" />

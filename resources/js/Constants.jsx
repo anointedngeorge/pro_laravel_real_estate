@@ -1,0 +1,9 @@
+
+
+export const COMMISSION_STATUS_MAP = {
+    null: 'PENDING',
+    'paid': 'PAID',
+    'Paid': 'PAID',
+    'unpaid': 'UNPAID',
+    'Unpaid': 'UNPAID',
+};

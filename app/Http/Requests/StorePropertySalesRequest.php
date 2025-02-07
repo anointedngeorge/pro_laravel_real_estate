@@ -19,15 +19,27 @@ class StorePropertySalesRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
+     
     public function rules(): array
     {
         return [
             'property_id' => ['required', 'exists:properties,id'],
-            'realtor_id' => ['required', 'exists:realtors,id'],
             'client_id' => ['required', 'exists:clients,id'],
-            'quantity_purchased' => ['nullable', 'integer'],
+            'quantity' => ['nullable', 'integer', 'required'],
             'initial_amount_paid' => ['nullable', 'integer'],
-            'balance' => ['nullable', 'integer'],
+            'amount' => ['nullable', 'integer'],
+
+            'sponsor_code' => ['required', 'string'],
+
+            'first_generation_commission' => ['required'],
+            'second_generation_commission' => ['nullable'],
+            'third_generation_commission' => ['nullable'],
+
+            'first_generation' => ['required', 'exists:realtors,id'],
+            'second_generation' => ['required', 'exists:realtors,id'],
+            'third_generation' => ['required', 'exists:realtors,id'],
         ];
+
     }
 }

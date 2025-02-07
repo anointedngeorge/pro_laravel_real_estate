@@ -1,57 +1,35 @@
-
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
-import SelectInput from '@/Components/SelectInput';
 import TextInput from '@/Components/TextInput';
-import { router, useForm } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import PrimaryButton from '../PrimaryButton';
+import SelectInput from '../SelectInput';
 import TextAreaInput from '../TextAreaInput';
 
-
-
-
-
-export function EditRealtor({
-    object
-}) {
-
-    const { data, setData, post, errors, reset, processing, progress } = useForm({
-        first_name: object.first_name || '',
-        last_name: object.last_name || '',
+export function CreateRealtor() {
+    const { data, setData, post, errors, processing } = useForm({
+        first_name: '',
+        last_name: '',
         image: '',
-        account_name: object.account_name || '',
-        account_number: object.account_number || '',
-        account_type: object.account_type || '',
-        bank_name: object.bank_name || '',
-        address: object.address || '',
-        country: object.country || '',
-        _method: "PUT"
+        account_name: '',
+        account_number: '',
+        account_type: '',
+        bank_name: '',
+        address: '',
+        country: '',
 
-    })
+    });
 
     const onFormSubmit = (e) => {
         e.preventDefault();
-        post(route('realtors.update', object.id))
-        // console.log(data);
-
-    }
-
+        post(route('realtors.store'));
+    };
 
     // Define dynamic form structure with various field types
     const prepareForm = [
         [
-            {
-                name: 'first_name', label: 'First Name', type: 'text', params: {
-                    'placeholder': 'FirstName',
-                    'value': data.first_name
-                }
-            },
-            {
-                name: 'last_name', label: 'Last Name', type: 'text', params: {
-                    'placeholder': 'LastName',
-                    'value': data.last_name
-                }
-            },
+            { name: 'first_name', label: 'First Name', type: 'text', params: { 'placeholder': 'FirstName' } },
+            { name: 'last_name', label: 'Last Name', type: 'text', params: { 'placeholder': 'LastName' } },
 
         ],
         [
@@ -61,19 +39,20 @@ export function EditRealtor({
                 type: 'select',
                 params: { required: true },
                 options: [
+                    { value: null, label: '...' },
                     { value: 'savings', label: 'Savings' },
                     { value: 'current', label: 'Current' }
-                ].sort((a, b) => (a.value === data.account_type ? -1 : 1))
+                ]
             },
-            { name: 'account_number', label: 'Account Number', type: 'text', params: { 'value': data.account_number, 'placeholder': 'AccountNumber' } },
-            { name: 'account_name', label: 'Account Name', type: 'text', params: { 'value': data.account_name, 'placeholder': 'AccountName' } },
-            { name: 'bank_name', label: 'Bank Name', type: 'text', params: { 'value': data.bank_name, 'placeholder': 'BankName' } },
+            { name: 'account_number', label: 'Account Number', type: 'text', params: { 'placeholder': 'AccountNumber' } },
+            { name: 'account_name', label: 'Account Name', type: 'text', params: { 'placeholder': 'AccountName' } },
+            { name: 'bank_name', label: 'Bank Name', type: 'text', params: { 'placeholder': 'BankName' } },
 
         ],
 
         [
-            { name: 'address', label: 'Address', type: 'text', params: { 'value': data.address, 'placeholder': 'Address' } },
-            { name: 'country', label: 'Country', type: 'text', params: { 'value': data.country, 'placeholder': 'Country' } },
+            { name: 'address', label: 'Address', type: 'text', params: { 'placeholder': 'Address' } },
+            { name: 'country', label: 'Country', type: 'text', params: { 'placeholder': 'Country' } },
 
         ],
         // [
@@ -99,7 +78,6 @@ export function EditRealtor({
         <form onSubmit={onFormSubmit}>
 
             <div className='mb-4'>
-                <img src={object.image_path} alt={data.first_name} className='w-20 h-20' />
                 <InputLabel
                     htmlFor="image"
                     value="Choose Picture"
@@ -125,6 +103,7 @@ export function EditRealtor({
                                     id={field.name}
                                     type="text"
                                     name={field.name}
+                                    value={data[field.name]}
                                     className="mt-1 block w-full"
                                     onChange={(e) => setData(field.name, e.target.value)}
                                     {...field.params}

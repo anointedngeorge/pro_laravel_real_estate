@@ -10,6 +10,7 @@ use App\Models\Realtors;
 use Request;
 use Session;
 use Storage;
+use Str;
 
 class RealtorsController extends Controller
 {
@@ -21,8 +22,11 @@ class RealtorsController extends Controller
         $queryParams = Request::query();
 
 
-        $limit = Request('limit') ? Request('limit') : 10;
-        $query = Realtors::query()->paginate(perPage: $limit);
+        $limit = Request('limit') ?? 10;
+        $query = Realtors::query()
+            ->orderBy('id', 'desc')
+            ->paginate(perPage: $limit)->onEachSide(1);
+        ;
 
         // 
         return inertia('Admin/Realtors/Index', [
@@ -37,7 +41,7 @@ class RealtorsController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Admin/Realtors/Create');
     }
 
     /**
@@ -45,7 +49,17 @@ class RealtorsController extends Controller
      */
     public function store(StoreRealtorsRequest $request)
     {
-        //
+        $data = $request->validated();
+        $image = $data['image'] ?? null;
+
+        // 
+        if ($image) {
+            $data['image_path'] = $image->store('realtors/' . Str::random(), 'public');
+        }
+        // dd($data);
+        Realtors::create($data);
+        return to_route('realtors.index')
+            ->with('message', 'Realtor was created');
     }
 
     /**
@@ -81,7 +95,16 @@ class RealtorsController extends Controller
     public function update(UpdateRealtorsRequest $request, Realtors $realtor)
     {
         $data = $request->validated();
+        $image = $data['image'] ?? null;
         $name = $realtor->fullname();
+        // 
+
+        if ($image) {
+            if ($realtor->image_path) {
+                Storage::disk('public')->deleteDirectory(dirname($realtor->image_path));
+            }
+            $data['image_path'] = $image->store('realtors/' . Str::random(), 'public');
+        }
         $realtor->update($data);
 
         return to_route('realtors.index')->with('message', "Realtors $name was updated");
@@ -100,4 +123,5 @@ class RealtorsController extends Controller
         $realtor->delete();
         return to_route('realtors.index')->with('message', "Realtor $name was deleted.");
     }
+
 }

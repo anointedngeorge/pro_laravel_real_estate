@@ -1,6 +1,7 @@
 import Pagination from '@/Components/Pagination';
 import SelectInput from '@/Components/SelectInput';
 import TextInput from '@/Components/TextInput';
+import { COMMISSION_STATUS_MAP } from '@/Constants';
 import { MoneyFormat, rangeGenerator } from '@/Functions';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
@@ -31,7 +32,7 @@ export default function Propertysales({ ...pageData }) {
 
     const onChangeLimit = (limit) => {
         queryParams.limit = limit;
-        router.get(route(`propertysales.index`), queryParams);
+        router.get(route(`commission.index`), queryParams);
     }
 
     const tableFilter = (input) => {
@@ -62,8 +63,15 @@ export default function Propertysales({ ...pageData }) {
     };
 
 
-    const onDestroy = (object) => {
-        router.delete(route('propertysales.destroy', object.id));
+    // const onDestroy = (object) => {
+    //     router.delete(route('commission.destroy', object.id));
+    // }
+
+    const changeCommissionStatus = (e) => {
+        const query = `${e}`.split('/');
+        const status = query[0];
+        const id = query[1];
+        router.put(route('commission.changestatus', [status, id]))
     }
 
     return (
@@ -72,13 +80,13 @@ export default function Propertysales({ ...pageData }) {
             header={
                 <div className='flex justify-between'>
                     <h2 className="text-xl font-semibold leading-tight text-amber-500">
-                        Property Sales
+                        Commission Page
                     </h2>
-                    <Link className='px-2 py-2 rounded items-center hover:bg-green-600 bg-green-500 text-white' href={route('propertysales.create')}>New Sales</Link>
+                    {/* <Link className='px-2 py-2 rounded items-center hover:bg-green-600 bg-green-500 text-white' href={route('commission.create')}>New Sales</Link> */}
                 </div>
             }
         >
-            <Head title="Property Sales" />
+            <Head title="Commissions" />
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -91,7 +99,7 @@ export default function Propertysales({ ...pageData }) {
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             <div className="pagination-footer">
-                                <Pagination links={pageData.propertysales.meta.links} />
+                                <Pagination links={pageData.commissions.meta.links} />
                             </div>
                             <div className='overflow-auto'>
                                 {/*top line*/}
@@ -133,66 +141,60 @@ export default function Propertysales({ ...pageData }) {
                                             <tr>
                                                 <TableHeading>ID</TableHeading>
                                                 <TableHeading>Property</TableHeading>
-                                                <TableHeading>Quantity</TableHeading>
+
                                                 <TableHeading>Client</TableHeading>
                                                 <TableHeading>Amount</TableHeading>
-                                                <TableHeading>Initial Amount Paid</TableHeading>
                                                 <TableHeading>First Generation</TableHeading>
                                                 <TableHeading>Second Generation</TableHeading>
                                                 <TableHeading>Third Generation</TableHeading>
+                                                <TableHeading>Status</TableHeading>
                                                 <TableHeading>Actions</TableHeading>
                                             </tr>
                                         </thead>
                                         <tbody className='odd:bg-white even:bg-gray-50'>
-                                            {pageData.propertysales.data.map((propertysale, index) => (
-                                                <tr key={propertysale.id}>
+                                            {pageData.commissions.data.map((commission, index) => (
+                                                <tr key={commission.id}>
                                                     <TableRow>{index + 1}</TableRow>
-                                                    <TableRow>{propertysale.property_id.name}</TableRow>
-                                                    <TableRow>{propertysale.quantity}</TableRow>
-                                                    <TableRow>{propertysale.client_id.fullname}</TableRow>
-                                                    <TableRow>{MoneyFormat({ amount: propertysale.amount })}</TableRow>
-                                                    <TableRow>{MoneyFormat({ amount: propertysale.initial_amount_paid })}</TableRow>
+                                                    <TableRow>{commission.property_sale_id.property_id.name}</TableRow>
+
+                                                    <TableRow>{commission.client_id.fullname}</TableRow>
+                                                    <TableRow>{MoneyFormat({ amount: commission.amount_paid })}</TableRow>
                                                     <TableRow>
-                                                        {propertysale.first_generation.fullname}
-                                                        <sup>
-                                                            <span className='bg-green-500 text-white p-1 rounded-full'>{propertysale.first_generation_commission}%</span>
-                                                        </sup>
+                                                        {MoneyFormat({ amount: commission.first_generation_commission })}
                                                     </TableRow>
                                                     <TableRow>
-                                                        {propertysale.second_generation.fullname}
-                                                        <sup>
-                                                            <span className='bg-amber-500 text-white p-1 rounded-full'>{propertysale.second_generation_commission}%</span>
-                                                        </sup>
+                                                        {MoneyFormat({ amount: commission.second_generation_commission })}
                                                     </TableRow>
                                                     <TableRow>
-                                                        {propertysale.third_generation.fullname}
-                                                        <sup>
-                                                            <span className='bg-gray-500 text-white p-1 rounded-full'>{propertysale.third_generation_commission}%</span>
-                                                        </sup>
+                                                        {MoneyFormat({ amount: commission.third_generation_commission })}
+                                                    </TableRow>
+
+
+                                                    <TableRow>
+                                                        {COMMISSION_STATUS_MAP[commission.status]}
+                                                        <select onChange={e => changeCommissionStatus(e.target.value)}>
+                                                            <option value={null + `/${commission.id}`}></option>
+                                                            <option value={`paid/${commission.id}`}>PAID</option>
+                                                            <option value={`unpaid/${commission.id}`}>UNPAID</option>
+                                                        </select>
                                                     </TableRow>
 
                                                     <TableRow>
                                                         <ul className='text-nowrap flex gap-x-2 px-2 py-3'>
                                                             <li>
-                                                                <Link className='text-blue-500' href={route('propertysales.edit', propertysale.id)}>Edit</Link>
-                                                            </li>
-                                                            <li>
-                                                                <Link className='text-amber-500' href={route('propertysales.show', propertysale.id)}>View</Link>
-                                                            </li>
-                                                            <li>
-                                                                <button className='text-red-500' onClick={e => onDestroy(propertysale)}>Delete</button>
+                                                                <Link className='text-white rounded bg-green-700 p-2' href={route('commission.show', commission.id)}>View Details</Link>
                                                             </li>
                                                         </ul>
                                                     </TableRow>
                                                 </tr>
                                             ))}
-
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
+
                             <div className="pagination-footer">
-                                <Pagination links={pageData.propertysales.meta.links} />
+                                <Pagination links={pageData.commissions.meta.links} />
                             </div>
                         </div>
                     </div>

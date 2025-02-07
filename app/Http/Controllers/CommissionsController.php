@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCommissionsRequest;
 use App\Http\Requests\UpdateCommissionsRequest;
+use App\Http\Resources\CommissionResource;
 use App\Models\Commissions;
+use Request;
 
 class CommissionsController extends Controller
 {
@@ -13,7 +15,18 @@ class CommissionsController extends Controller
      */
     public function index()
     {
-        //
+        $queryParams = Request::query();
+
+
+        $limit = Request('limit') ?? 10;
+        $query = Commissions::query()->paginate(perPage: $limit);
+
+        // 
+        return inertia('Admin/Commissions/Index', [
+            'commissions' => CommissionResource::collection($query),
+            'queryParams' => $queryParams ?? null,
+            'message' => Session('message'),
+        ]);
     }
 
     /**
@@ -35,9 +48,12 @@ class CommissionsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Commissions $commissions)
+    public function show(Commissions $commission)
     {
-        //
+        return inertia('Admin/Commissions/Show', [
+            'commission' => new CommissionResource($commission),
+            'message' => Session('message'),
+        ]);
     }
 
     /**
@@ -62,5 +78,12 @@ class CommissionsController extends Controller
     public function destroy(Commissions $commissions)
     {
         //
+    }
+
+
+    public function changeCommissionStatus($status, $id)
+    {
+        Commissions::query()->where('id', $id)->update(['status' => $status]);
+        return to_route('commission.index')->with('message', "Status Updated {$status}");
     }
 }

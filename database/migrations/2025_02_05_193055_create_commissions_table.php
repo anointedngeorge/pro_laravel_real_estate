@@ -13,12 +13,13 @@ return new class extends Migration {
     {
         Schema::create('commissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('propertysales_id')->constrained('propertysales');
+            $table->foreignId('propertysales_id')->constrained('property_sales');
+            $table->foreignId('client_id')->constrained('clients');
             $table->float('amount_paid')->nullable();
-            $table->foreignId('first_generation')->nullable()->constrained('realtors');
-            $table->foreignId('second_generation')->nullable()->constrained('realtors');
-            $table->foreignId('third_generation')->nullable()->constrained('realtors');
-            $table->string('status');
+            $table->string('first_generation_commission')->nullable();
+            $table->string('second_generation_commission')->nullable();
+            $table->string('third_generation_commission')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

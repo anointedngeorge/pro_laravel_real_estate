@@ -27,13 +27,28 @@ export default function show({ auth, data }) {
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                        <div className='p-3 '>
+                            <h3 className='text-2xl text-green-600 font-extrabold'><span className='text-red-600'>ReferralLink:</span> <span>{data.realtor.referralLink}</span></h3>
+                        </div>
                         <div className="p-6 text-gray-900 grid grid-cols-4">
                             <div>
-                                <ViewData objects={data.realtor} />
+                                <ViewData
+                                    objects={data.realtor}
+                                    exclude='referralLink,id,image_path'
+                                />
                             </div>
-                            <div><pre>{JSON.stringify(data.first, undefined, 2)}</pre></div>
-                            <div><pre>{JSON.stringify(data.second, undefined, 2)}</pre></div>
-                            <div><pre>{JSON.stringify(data.third, undefined, 2)}</pre></div>
+                            <div>
+                                <h3>First Generation List</h3>
+                                <pre>{JSON.stringify(data.first, undefined, 2)}</pre>
+                            </div>
+                            <div>
+                                <h3>Second Generation List</h3>
+                                <pre>{JSON.stringify(data.second, undefined, 2)}</pre>
+                            </div>
+                            <div>
+                                <h3>Third Generation List</h3>
+                                <pre>{JSON.stringify(data.third, undefined, 2)}</pre>
+                            </div>
                         </div>
                     </div>
                 </div>

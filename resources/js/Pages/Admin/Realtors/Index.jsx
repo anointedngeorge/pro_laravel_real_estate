@@ -98,7 +98,6 @@ export default function Realtors({ ...pageData }) {
                             <div className='overflow-auto'>
                                 {/*top line*/}
                                 <div className='grid grid-cols-3 mb-8 mt-4'>
-
                                     <div>
                                         <SelectInput
                                             name="status"
@@ -133,8 +132,10 @@ export default function Realtors({ ...pageData }) {
                                     <thead className='bg-gray-100'>
                                         <tr>
                                             <TableHeading>ID</TableHeading>
+                                            <TableHeading>Picture</TableHeading>
                                             <TableHeading>Fullname</TableHeading>
                                             <TableHeading>Sponsor</TableHeading>
+
                                             <TableHeading>Actions</TableHeading>
                                         </tr>
                                     </thead>
@@ -142,8 +143,22 @@ export default function Realtors({ ...pageData }) {
                                         {pageData.realtors.data.map((realtor, index) => (
                                             <tr key={realtor.sponsor_code}>
                                                 <TableRow>{index + 1}</TableRow>
+                                                <TableRow>
+                                                    <img
+                                                        src={realtor.image_path}
+                                                        alt={realtor.fullname}
+                                                        className='w-20 h-20 rounded'
+                                                    />
+                                                </TableRow>
                                                 <TableRow>{realtor.fullname}</TableRow>
                                                 <TableRow>{realtor.sponsor_code}</TableRow>
+                                                {/* <TableRow>
+                                                    <select >
+                                                        <option value="">{"Don't"}</option>
+                                                        <option value="yes">Yes</option>
+                                                        <option value="no">No</option>
+                                                    </select>
+                                                </TableRow> */}
                                                 <TableRow>
                                                     <ul className='text-nowrap flex gap-x-2 px-2 py-3'>
                                                         <li>
@@ -170,6 +185,7 @@ export default function Realtors({ ...pageData }) {
                     </div>
                 </div>
             </div>
+
         </AuthenticatedLayout>
     );
 }

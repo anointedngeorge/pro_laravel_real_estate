@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\CommissionsController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\PropertySalesController;
@@ -32,6 +34,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     )->name('dashboard');
 
     Route::resource('property', PropertyController::class);
+    Route::get('property/clients/{property}', 
+    [PropertyController::class, 'propertyClients'])->name('property.clients');
     Route::resource('branch', BranchController::class);
     Route::resource('client', ClientController::class);
     Route::resource('realtors', RealtorsController::class);
@@ -40,6 +44,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         PropertySalesController::class,
         'sponsor'
     ])->name('propertysales.sponsor');
+    // commission
+    Route::resource('commission', CommissionsController::class);
+    Route::put('/commission/changestatus/{status}/{id}', [
+        CommissionsController::class,
+        'changeCommissionStatus'
+    ])->name('commission.changestatus');
+
+    // end
 });
 
 Route::middleware('auth')->group(function () {
@@ -49,3 +61,8 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
+
+
+// frontend routes
+
+Route::get("/realtors/referral/{sponsor_code}", [FrontendController::class, 'referralLink'])->name('frontend.referralLink');

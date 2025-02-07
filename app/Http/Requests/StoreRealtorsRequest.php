@@ -24,7 +24,14 @@ class StoreRealtorsRequest extends FormRequest
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'sponsor_code' => ['required', 'numeric', 'digits:8'], // Ensures it's a 8-digit number
+            'sponsor_code' => ['required', 'numeric', 'digits:8'],
+            'image' => ['nullable', 'file', 'image', 'mimes:png,jpg,jpeg', 'max:2048'],
+            'account_name' => ['nullable'],
+            'account_type' => ['nullable'],
+            'account_number' => ['nullable'],
+            'bank_name' => ['nullable'],
+            'address' => ['nullable'],
+            'country' => ['nullable'],
         ];
     }
 

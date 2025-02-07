@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCommissionsRequest;
 use App\Http\Requests\StorePropertySalesRequest;
 use App\Http\Requests\UpdatePropertySalesRequest;
 use App\Http\Resources\ClientResource;
@@ -9,11 +10,12 @@ use App\Http\Resources\PropertyResource;
 use App\Http\Resources\PropertySalesResource;
 use App\Http\Resources\RealtorsResource;
 use App\Models\Client;
+use App\Models\Commissions;
 use App\Models\Property;
 use App\Models\PropertySales;
 use App\Models\Realtors;
 use App\Models\Referals;
-use Illuminate\Http\JsonResponse;
+use Request;
 use Response;
 
 class PropertySalesController extends Controller
@@ -23,7 +25,15 @@ class PropertySalesController extends Controller
      */
     public function index()
     {
-        //
+        $queryParams = Request::query();
+
+        $limit = Request('limit') ?? 10;
+        $query = PropertySales::query()->paginate(perPage: $limit);
+        return inertia('Admin/PropertySales/Index', [
+            'propertysales' => PropertySalesResource::collection($query),
+            'message' => Session('message'),
+            'queryParams' => $queryParams ?: null,
+        ]);
     }
 
     /**
@@ -47,29 +57,77 @@ class PropertySalesController extends Controller
      */
     public function store(StorePropertySalesRequest $request)
     {
-        //
+        $data = $request->validated();
+        $initial_amount = (float) $data['initial_amount_paid'];
+        $amount = (float) $data['amount'];
+        $client_id = $data['client_id'];
+        // $property_sales_id = $data->id;
+
+        $first_generation_commission = $data['first_generation_commission'] ? (int) $data['first_generation_commission'] : 0;
+        $second_generation_commission = $data['second_generation_commission'] ? (int) $data['second_generation_commission'] : 0;
+        $third_generation_commission = $data['third_generation_commission'] ? (int) $data['third_generation_commission'] : 0;
+
+        $first = $first_generation_commission ? $first_generation_commission / 100 * $initial_amount : 0;
+        $second = $second_generation_commission ? $second_generation_commission / 100 * $initial_amount : 0;
+        $third = $third_generation_commission ? $third_generation_commission / 100 * $initial_amount : 0;
+        $total_commission = array_reduce([
+            $first,
+            $second,
+            $third
+        ], function ($a, $b) {
+            return $a + $b;
+        });
+
+        // create if client_id does not exists
+        $sales = PropertySales::create($data);
+        if ($sales) {
+            $commission_request = [
+                'amount_paid' => $initial_amount,
+                'propertysales_id' => $sales->id,
+                'client_id' => $client_id,
+                'first_generation_commission' => $first,
+                'second_generation_commission' => $second,
+                'third_generation_commission' => $third,
+            ];
+
+            // create the commissions table
+            Commissions::create($commission_request);
+            return to_route('propertysales.index')->with('message', "Sales Record Created");
+        }
+
+        return to_route('propertysales.index')->with('message', "Could create a new record.");
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(PropertySales $propertySelling)
+    public function show(PropertySales $propertysale)
     {
-        //
+        return inertia('Admin/PropertySales/Show', [
+            'propertysales' => new PropertySalesResource($propertysale),
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PropertySales $propertySelling)
+    public function edit(PropertySales $propertysale)
     {
-        //
+
+        $propertities = Property::all();
+        $clients = Client::all();
+
+        return inertia('Admin/PropertySales/Edit', [
+            'propertysales' => new PropertySalesResource($propertysale),
+            'propertities' => PropertyResource::collection($propertities),
+            'clients' => ClientResource::collection($clients),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePropertySalesRequest $request, PropertySales $propertySelling)
+    public function update(UpdatePropertySalesRequest $request, PropertySales $propertysale)
     {
         //
     }
@@ -77,9 +135,10 @@ class PropertySalesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PropertySales $propertySelling)
+    public function destroy(PropertySales $propertysale)
     {
-        //
+        $propertysale->delete();
+        return to_route('propertysales.index')->with('message', "Record deleted.");
     }
 
 
@@ -87,13 +146,13 @@ class PropertySalesController extends Controller
     {
         // sponsor_id → The person who referred someone (the upline).
         // referred_id → The person who was referred (the downline).
-        
+
         // Get the first-generation agent (who made the sale)
         $firstGen = Realtors::where('sponsor_code', $sponsor)->first();
 
         if (!$firstGen) {
             return Response::json([
-                'success' => false,
+                'status' => false,
                 'error' => "Sponsor with code $sponsor does not exist.",
             ], 404);
         }
@@ -108,10 +167,10 @@ class PropertySalesController extends Controller
 
         // Prepare response
         return Response::json([
-            'success' => true,
-            'first_generation' => new RealtorsResource($firstGen),
-            'second_generation' => $secondGenRealtor ? new RealtorsResource($secondGenRealtor) : null,
-            'third_generation' => $thirdGenRealtor ? new RealtorsResource($thirdGenRealtor) : null,
+            'status' => true,
+            'first_generation_commission' => new RealtorsResource($firstGen),
+            'second_generation_commission' => $secondGenRealtor ? new RealtorsResource($secondGenRealtor) : null,
+            'third_generation_commission' => $thirdGenRealtor ? new RealtorsResource($thirdGenRealtor) : null,
         ]);
 
     }
