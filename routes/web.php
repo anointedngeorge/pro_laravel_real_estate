@@ -6,6 +6,8 @@ use App\Http\Controllers\CommissionsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PropertyBlockPlotsController;
+use App\Http\Controllers\PropertyBlocksController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\PropertySalesController;
 use App\Http\Controllers\RealtorsController;
@@ -33,13 +35,28 @@ Route::middleware(['auth', 'verified'])->group(function () {
         [DashboardController::class, 'index']
     )->name('dashboard');
 
+
+    // 
     Route::resource('property', PropertyController::class);
-    Route::get('property/clients/{property}', 
-    [PropertyController::class, 'propertyClients'])->name('property.clients');
+    Route::get(
+        'property/clients/{property}',
+        [PropertyController::class, 'propertyClients']
+    )->name('property.clients');
+
+    Route::get(
+        'property/blocks/{property}',
+        [PropertyController::class, 'propertyBlocks']
+    )->name('property.blocks');
+    // 
     Route::resource('branch', BranchController::class);
     Route::resource('client', ClientController::class);
     Route::resource('realtors', RealtorsController::class);
     Route::resource('propertysales', PropertySalesController::class);
+
+    // 
+    Route::resource('propertyblock', PropertyBlocksController::class);
+    Route::resource('propertyblockplot', PropertyBlockPlotsController::class);
+    // 
     Route::get('/propertysales/sponsor/{sponsor}', [
         PropertySalesController::class,
         'sponsor'

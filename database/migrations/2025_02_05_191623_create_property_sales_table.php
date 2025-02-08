@@ -27,6 +27,7 @@ return new class extends Migration {
             $table->foreignId('first_generation')->constrained('realtors');
             $table->foreignId('second_generation')->constrained('realtors');
             $table->foreignId('third_generation')->constrained('realtors');
+            // $table->date('created_at_date')->default(now()->toDate());
             $table->timestamps();
         });
         // [

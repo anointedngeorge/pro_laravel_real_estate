@@ -86,9 +86,12 @@ export default function show({ auth, commission }) {
                                             </span>
                                         </sup>
                                     </h3>
+                                    <div>
+                                        <img src={commission.property_sale_id.first_generation.image_path} alt="" className='w-20 h-20' />
+                                    </div>
                                     <ViewData
                                         objects={commission.property_sale_id.first_generation}
-                                        exclude='id'
+                                        exclude='id,image_path, referralLink'
                                     />
                                 </div>
 
@@ -100,9 +103,12 @@ export default function show({ auth, commission }) {
                                             </span>
                                         </sup>
                                     </h3>
+                                    <div>
+                                        <img src={commission.property_sale_id.second_generation.image_path} alt="" className='w-20 h-20' />
+                                    </div>
                                     <ViewData
                                         objects={commission.property_sale_id.second_generation}
-                                        exclude='id'
+                                        exclude='id,image_path, referralLink'
                                     />
                                 </div>
                                 <div>
@@ -113,9 +119,12 @@ export default function show({ auth, commission }) {
                                             </span>
                                         </sup>
                                     </h3>
+                                    <div>
+                                        <img src={commission.property_sale_id.third_generation.image_path} alt="" className='w-20 h-20' />
+                                    </div>
                                     <ViewData
                                         objects={commission.property_sale_id.third_generation}
-                                        exclude='id'
+                                        exclude='id,image_path, referralLink'
                                     />
                                 </div>
 

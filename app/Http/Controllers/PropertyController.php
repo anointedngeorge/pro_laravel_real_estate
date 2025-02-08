@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePropertyRequest;
 use App\Http\Requests\UpdatePropertyRequest;
 use App\Http\Resources\ClientResource;
+use App\Http\Resources\PropertyBlockResource;
 use App\Http\Resources\PropertyResource;
 use App\Http\Resources\PropertySalesResource;
 use App\Models\Property;
+use App\Models\PropertyBlocks;
 use Request;
 use Storage;
 
@@ -53,8 +55,13 @@ class PropertyController extends Controller
      */
     public function show(Property $property)
     {
-        return inertia('Admin/Property/Show', [
+
+        $propertyBlocks = PropertyBlocks::where('property_id', $property->id)->get();
+        // dd($propertyBlocks);
+        return inertia('Admin/Property/Show', props: [
             'property' => new PropertyResource($property),
+            'propertyBlocks' => PropertyBlockResource::collection($propertyBlocks),
+            'message' => Session('message'),
         ]);
     }
 
@@ -97,6 +104,14 @@ class PropertyController extends Controller
         return to_route('property.index')->with('message', "Property $name was deleted.");
     }
 
+
+    public function propertyBlocks(Property $property)
+    {
+        $mypro = new PropertyResource($property);
+        return inertia('Admin/Property/CreateBlocks', [
+            'property' => $mypro,
+        ]);
+    }
 
     // 
 

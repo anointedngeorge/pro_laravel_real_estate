@@ -41,12 +41,12 @@ class StoreRealtorsRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'sponsor_code' => $this->generateSponsorCode(), // Call the function to generate a number
+            'sponsor_code' => $this->generateSponsorCode(),
         ]);
     }
 
     /**
-     * Generate a random 10-digit numeric sponsor code.
+     * Generate a random 8-digit numeric sponsor code.
      */
     private function generateSponsorCode(): string
     {

@@ -280,7 +280,7 @@ export function CreateSalesForm({
                     {first ? <pre className='font-bold  py-2 px-2 text-white bg-green-700'><MoneyFormat amount={first} /> </pre> : ''}
                     <ViewData
                         objects={sponsor.first_generation_commission}
-                        exclude='id, created_at, updated_at, first_name, last_name'
+                        exclude={'id,created_at, image_path, referralLink,address,country,sponsor_code,updated_at, first_name, last_name'}
                     />
                 </div>
                 <div>
@@ -288,7 +288,7 @@ export function CreateSalesForm({
                     {second ? <pre className='font-bold  py-2 px-2 text-white bg-gray-700'><MoneyFormat amount={second} /> </pre> : ''}
                     <ViewData
                         objects={sponsor.second_generation_commission}
-                        exclude='id, created_at, updated_at, first_name, last_name'
+                        exclude='id, created_at, image_path, referralLink,address,country,sponsor_code,updated_at, first_name, last_name'
                     />
                 </div>
                 <div>
@@ -296,7 +296,7 @@ export function CreateSalesForm({
                     {third ? <pre className='font-bold  py-2 px-2 text-white bg-amber-700'><MoneyFormat amount={third} /> </pre> : ''}
                     <ViewData
                         objects={sponsor.third_generation_commission}
-                        exclude='id, created_at, updated_at, first_name, last_name'
+                        exclude='id, created_at, image_path, referralLink,address,country,sponsor_code,updated_at, first_name, last_name'
                     />
                 </div>
             </div>
