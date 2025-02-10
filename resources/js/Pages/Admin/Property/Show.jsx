@@ -1,11 +1,12 @@
 
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
+import SelectInput from '@/Components/SelectInput';
 import TextInput from '@/Components/TextInput';
 import { ViewData } from '@/Components/ViewData';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 
@@ -16,10 +17,10 @@ const CreateBlockComponent = ({ property, propertyBlocks }) => {
     });
 
     // update property block
-    const { data: blockdata, setData: blocksetData, put, errors: blockerrors } = useForm({
-        'name': '',
-        'property_id': property.id,
-        '__method': 'PUT'
+    const { data: blockdata, setData: blocksetData, post: blockPost, errors: blockerrors } = useForm({
+        name: 'None',
+        property_id: property.id,
+        _method: "PUT"
     });
 
     const [editInput, setEditInput] = useState(true);
@@ -48,9 +49,10 @@ const CreateBlockComponent = ({ property, propertyBlocks }) => {
 
     const onUpdatePropertyBlock = (e) => {
         e.preventDefault();
-        const block = e.target.id;
-        put(route('propertyblock.update', 5));
+        blockPost(route('propertyblock.update', e.target.id));
     }
+
+
 
 
     return (
@@ -135,9 +137,171 @@ const CreateBlockComponent = ({ property, propertyBlocks }) => {
 
 
 
+const CreateBlockPlotsComponent = ({ property, propertyBlocks, propertyBlockPlots }) => {
+    const { data, setData, post, errors } = useForm({
+        'name': '',
+        'property_block_id': '',
+        'property_id': property.id
+    });
+
+    // update property block
+    const { data: blockdata, setData: blocksetData, post: blockPost, errors: blockerrors } = useForm({
+        name: 'None',
+        property_block_id: '',
+        property_id: property.id,
+        _method: "PUT"
+    });
+
+    const [editInput, setEditInput] = useState(true);
+    const [editInputID, setEditInputID] = useState(true);
+    const [editBtnText, setEditBtnText] = useState('Edit');
+
+    const [plotsdata, setPlotsData] = useState([]);
+
+    const toggleInputState = (inputid) => {
+        if (editInputID === inputid) {
+            // If clicking the same button, toggle back to default state
+            setEditInputID(null);
+            setEditInput(true);
+            setEditBtnText('Edit');
+        } else {
+            // Enable editing for the selected input
+            setEditInputID(inputid);
+            setEditInput(false);
+            setEditBtnText('Editing');
+        }
+    };
 
 
-export default function show({ auth, property, message, propertyBlocks }) {
+    const onSubmitF = (e) => {
+        e.preventDefault();
+        post(route('propertyblockplot.store'));
+    }
+
+    const onUpdatePropertyBlock = (e) => {
+        e.preventDefault();
+        blockPost(route('propertyblockplot.update', e.target.id));
+    }
+
+    const filterBlockPlots = (e) => {
+        const data = [...propertyBlockPlots.data.filter(f => f.property_block_id == e)];
+        setPlotsData(data);
+        blocksetData('property_block_id', e);
+    }
+
+    return (
+        <div className='grid grid-cols-2 gap-x-4 mt-8'>
+            <div className='p-3 border-black border-2'>
+                <h3 className='text-amber-500 text-2xl font-bold'>Create New Block Plots</h3>
+                <hr />
+                <div className='mt-4 mb-4'>
+                    <form onSubmit={onSubmitF}>
+                        <div className='w-full'>
+                            <InputLabel
+                                htmlFor="block_plot_name"
+                                value={'Block Plot Name'}
+                            />
+                            <TextInput
+                                id='block_plot_name'
+                                className="w-full"
+                                isfocused={'true'}
+                                placeholder='Enter Block Plot Name'
+                                onChange={e => setData('name', e.target.value)}
+                            />
+                        </div>
+
+                        <div className='w-full'>
+                            <InputLabel
+                                htmlFor="block"
+                                value={'Block Name'}
+                            />
+                            <SelectInput
+                                id='block_plot_name'
+                                className="w-full"
+                                isfocused={'true'}
+                                placeholder='Enter Block Plot Name'
+                                onChange={e => setData('property_block_id', e.target.value)}
+                            >
+                                <option value="">Choose</option>
+                                {propertyBlocks.data.map((item, index) => (
+                                    <option value={item.id} key={`block_plot_item_${index}`}>{item.name}</option>
+                                ))}
+                            </SelectInput>
+                        </div>
+                        <div className='mt-4'>
+                            <PrimaryButton>Create Plot</PrimaryButton>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div className='border-s-amber-600 border-2 p-3 bg-amber-50'>
+                <h3 className='text-amber-500 text-2xl font-bold'>View Property Block Plots</h3>
+
+                <div className='w-full'>
+                    <SelectInput
+                        className="w-full"
+                        onChange={e => filterBlockPlots(e.target.value)}
+                    >
+                        <option value="">Choose</option>
+                        {propertyBlocks.data.map((item, index) => (
+                            <option value={item.id} key={`block_plot_item_${index}`}>{item.name}</option>
+                        ))}
+                    </SelectInput>
+                </div>
+                <div>
+                    <div className='w-full'>
+
+                        {plotsdata.map((item, index) => (
+                            <div className='flex flex-row justify-between mt-2 border-b-2 py-1' key={`blocks_${index}`}>
+                                <div>
+                                    <div>
+                                        {editInputID === `input${index}` ? (
+                                            <form onSubmit={onUpdatePropertyBlock} id={`${item.id}`}>
+                                                <input
+                                                    type="text"
+                                                    id={`input${index}`}
+                                                    defaultValue={blockdata.name}
+                                                    className="border border-gray-400 rounded px-2 py-1"
+                                                    onChange={e => blocksetData('name', e.target.value)}
+                                                    hidden={editInputID === `input${index}` ? editInput : true}
+                                                />
+
+                                                <button type="submit" className="ml-2 bg-blue-500 text-white px-3 py-1 rounded">
+                                                    Update
+                                                </button>
+                                            </form>
+                                        ) : <div>{item.name}</div>}
+                                    </div>
+                                </div>
+                                <div className='flex gap-x-2'>
+                                    <button
+                                        className='bg-green-500 text-white font-bold px-3 py-1 rounded'
+                                        onClick={() => {
+                                            toggleInputState(`input${index}`);
+                                            blocksetData('name', item.name)
+                                            // blocksetData('id', item.id);
+                                        }}
+                                    >
+                                        {editInputID === `input${index}` ? editBtnText : 'Edit'}
+                                    </button>
+                                    <button className='bg-red-500 text-white font-bold px-3 py-1 rounded'>Delete</button>
+                                </div>
+                            </div>
+                        ))}
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+
+
+
+export default function show({ auth, property, message, propertyBlocks, propertyBlockPlots }) {
 
     return (
         <AuthenticatedLayout
@@ -182,10 +346,13 @@ export default function show({ auth, property, message, propertyBlocks }) {
                                 property={property}
                                 propertyBlocks={propertyBlocks}
                             />
-
+                            <CreateBlockPlotsComponent
+                                property={property}
+                                propertyBlocks={propertyBlocks}
+                                propertyBlockPlots={propertyBlockPlots}
+                            />
 
                             {/* blocks plots */}
-
 
                         </div>
                     </div>

@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
-
-class PropertyBlocks extends Model
+class Settings extends Model
 {
+
     protected $fillable = [
         'name',
-        'property_id',
+        'description'
     ];
-
+    /** @use HasFactory<\Database\Factories\SettingsFactory> */
+    use HasFactory;
 }

@@ -7,14 +7,15 @@ import { router, useForm } from '@inertiajs/react';
 import PrimaryButton from '../PrimaryButton';
 import { useEffect, useRef, useState } from 'react';
 import { ViewData } from '../ViewData';
-import { MoneyFormat } from '@/Functions';
+import { MoneyFormat, stringToArray } from '@/Functions';
 
 
 
 
 
 export function CreateSalesForm({
-    pageData
+    pageData,
+    settings
 }) {
 
     const { data, setData, post, errors, reset, processing, progress } = useForm({
@@ -30,7 +31,10 @@ export function CreateSalesForm({
         first_generation: '',
         second_generation: '',
         third_generation: '',
-    })
+    });
+
+
+    // 
     const [sponsor, setSponsor] = useState({
         'first_generation_commission': {},
         'second_generation_commission': {},
@@ -46,6 +50,9 @@ export function CreateSalesForm({
     const [first_generation, setFirstGeneration] = useState('');
     const [second_generation, setSecondGeneration] = useState('');
     const [third_generation, setThirdGeneration] = useState('');
+
+    const [propertBlocks, setPropertBlocks] = useState([]);
+    const [propertBlockPlots, setPropertBlockPlots] = useState([]);
 
 
     const onFormSubmit = (e) => {
@@ -66,7 +73,36 @@ export function CreateSalesForm({
 
     }
 
+    const propertListingBlocks = async (e) => {
+        const url = route('propertysales.propertyblocks', e);
 
+        const request = await fetch(url);
+        const response = await request.json();
+        if (response.status) {
+            setPropertBlocks(response.blocks);
+        } else {
+            setPropertBlocks([]);
+            setPropertBlockPlots([]);
+        }
+        // set the value
+        setData("property_id", e);
+    }
+
+
+    const propertListingBlockPlots = async (e) => {
+        const url = route('propertysales.propertyblockplots', e);
+
+        const request = await fetch(url);
+        const response = await request.json();
+
+        if (response.status) {
+            setPropertBlockPlots(response.blockPlots);
+        } else {
+            setPropertBlockPlots([]);
+        }
+        // set the value
+        setData("block_id", e);
+    }
 
     useEffect(() => {
         setFirstGeneration(sponsor.first_generation_commission.id);
@@ -108,7 +144,7 @@ export function CreateSalesForm({
         <div>
             <form onSubmit={onFormSubmit} >
                 <div>
-                    <div className='grid grid-cols-5 gap-2'>
+                    <div className='grid grid-cols-3 gap-2 mb-2'>
                         <div>
                             <InputLabel
                                 htmlFor="property_listing"
@@ -118,7 +154,7 @@ export function CreateSalesForm({
                                 id="property_listing"
                                 className="mt-1 block w-full"
                                 required={true}
-                                onChange={(e) => setData("property_id", e.target.value)}
+                                onChange={(e) => propertListingBlocks(e.target.value)}
                             >
                                 <option value="">Select Property</option>
                                 {pageData.propertities.data.map((item) => (
@@ -128,6 +164,54 @@ export function CreateSalesForm({
                             <InputError message={errors.property_id} className="mt-2" />
                         </div>
 
+                        <div>
+                            <InputLabel
+                                htmlFor="block_id"
+                                value="Choose Property Blocks"
+                            />
+                            <SelectInput
+                                id="block_id"
+                                className="mt-1 block w-full"
+                                required={true}
+                                onChange={(e) => propertListingBlockPlots(e.target.value)}
+                            >
+                                <option >Choose</option>
+                                {propertBlocks.map((item) => (
+                                    <option value={item.id} key={`block_${item.id}`}>{item.name}</option>
+                                ))}
+                            </SelectInput>
+                            <InputError message={errors.client_id} className="mt-2" />
+                        </div>
+
+                        <div>
+                            <InputLabel
+                                htmlFor="block_plot_id"
+                                value="Choose Plots"
+                            />
+                            <SelectInput
+                                id="block_plot_id"
+                                className="mt-1 block w-full"
+                                required={true}
+                                multiple
+                                onChange={(e) => {
+                                    const selectedValues = Array.from(e.target.selectedOptions, (option) => option.value);
+                                    setData('block_plot_ids', selectedValues);
+                                }}
+                            >
+
+                                {propertBlockPlots.map((item) => (
+                                    <option value={item.id} key={`block_${item.id}`}>{item.name}</option>
+                                ))}
+                            </SelectInput>
+                            <InputError message={errors.client_id} className="mt-2" />
+                        </div>
+
+
+
+
+                    </div>
+
+                    <div className='grid grid-cols-4 gap-2'>
                         <div>
                             <InputLabel
                                 htmlFor="client_listing"
@@ -224,7 +308,8 @@ export function CreateSalesForm({
                                 className="mt-1 block w-full"
                                 onChange={(e) => setData("first_generation_commission", e.target.value)}
                             >
-                                {[0, 15, 8, 5].map((item) => (
+                                <option></option>
+                                {stringToArray(settings['first_generation_percentage']).map((item) => (
                                     <option value={item} key={`first_gen_${item}`}>{`${item}%`}</option>
                                 ))}
                             </SelectInput>
@@ -241,7 +326,8 @@ export function CreateSalesForm({
                                 className="mt-1 block w-full"
                                 onChange={(e) => setData("second_generation_commission", e.target.value)}
                             >
-                                {[0, 8, 5, 1].map((item) => (
+                                <option></option>
+                                {stringToArray(settings['second_generation_percentage']).map((item) => (
                                     <option value={item} key={`second_gen_${item}`}>{`${item}%`}</option>
                                 ))}
                             </SelectInput>
@@ -258,7 +344,8 @@ export function CreateSalesForm({
                                 className="mt-1 block w-full"
                                 onChange={(e) => setData("third_generation_commission", e.target.value)}
                             >
-                                {[0, 15, 8, 5].map((item) => (
+                                <option></option>
+                                {stringToArray(settings['third_generation_percentage']).map((item) => (
                                     <option value={item} key={`third_gen_${item}`}>{`${item}%`}</option>
                                 ))}
                             </SelectInput>

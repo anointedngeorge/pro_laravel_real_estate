@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdatePropertyBlockPlotsRequest extends FormRequest
+class StoreSettingsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,7 @@ class UpdatePropertyBlockPlotsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'max:255'],
-            'property_block_id' => ['exists:property_blocks,id', 'required'],
-            'property_id' => ['exists:properties,id', 'required']
+            //
         ];
     }
 }

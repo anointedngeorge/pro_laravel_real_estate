@@ -6,6 +6,7 @@ use App\Http\Requests\StorePropertyBlocksRequest;
 use App\Http\Requests\UpdatePropertyBlocksRequest;
 use App\Http\Resources\PropertyResource;
 use App\Models\Property;
+use App\Models\PropertyBlockPlots;
 use App\Models\PropertyBlocks;
 
 class PropertyBlocksController extends Controller
@@ -43,15 +44,15 @@ class PropertyBlocksController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PropertyBlocks $propertyBlocks)
+    public function show(PropertyBlocks $propertyblock)
     {
-        //
+
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PropertyBlocks $propertyBlocks)
+    public function edit(PropertyBlocks $propertyBlock)
     {
         //
     }
@@ -59,16 +60,14 @@ class PropertyBlocksController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePropertyBlocksRequest $request, PropertyBlocks $propertyBlocks)
+    public function update(UpdatePropertyBlocksRequest $request, PropertyBlocks $propertyblock)
     {
         $data = $request->validated();
 
         $property = Property::query()->where('id', $data['property_id'])->first();
-        $problock = PropertyBlocks::where('id', $propertyBlocks->id)
-            ->where('property_id', $data['property_id']);
-        dd($propertyBlocks->id);
-        dd($problock);
-        // ->update(['name' => $data['name']]);
+        PropertyBlocks::where('id', $propertyblock->id)
+            ->where('property_id', $data['property_id'])
+            ->update(['name' => $data['name']]);
 
         return to_route('property.show', [
             'property' => new PropertyResource($property),
@@ -78,7 +77,7 @@ class PropertyBlocksController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PropertyBlocks $propertyBlocks)
+    public function destroy(PropertyBlocks $propertyblock)
     {
         //
     }

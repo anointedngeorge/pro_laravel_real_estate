@@ -12,3 +12,19 @@ export function MoneyFormat({ currency_type = 'NGN', amount = 0.00 }) {
     const formatted = new Intl.NumberFormat('en-NG', { style: 'currency', currency: currency_type }).format(amount);
     return formatted;
 }
+
+
+export function formatString(datastring) {
+    return datastring.toString().split('_').join(' ').toUpperCase();
+}
+
+
+
+
+export function stringToArray(datastring) {
+    return datastring
+        .toString()
+        .split(',')
+        .map(item => item.trim())
+        .filter(item => item !== ""); // Remove empty values if necessary
+}

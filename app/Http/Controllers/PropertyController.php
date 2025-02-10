@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePropertyRequest;
 use App\Http\Requests\UpdatePropertyRequest;
 use App\Http\Resources\ClientResource;
+use App\Http\Resources\PropertyBlockPlotsResource;
 use App\Http\Resources\PropertyBlockResource;
 use App\Http\Resources\PropertyResource;
 use App\Http\Resources\PropertySalesResource;
 use App\Models\Property;
+use App\Models\PropertyBlockPlots;
 use App\Models\PropertyBlocks;
 use Request;
 use Storage;
@@ -57,10 +59,15 @@ class PropertyController extends Controller
     {
 
         $propertyBlocks = PropertyBlocks::where('property_id', $property->id)->get();
+
+        // Fetch all block plots
+        $propertyBlockPlots = PropertyBlockPlots::whereIn('property_block_id', $propertyBlocks->pluck('id'))->get();
+
         // dd($propertyBlocks);
         return inertia('Admin/Property/Show', props: [
             'property' => new PropertyResource($property),
             'propertyBlocks' => PropertyBlockResource::collection($propertyBlocks),
+            'propertyBlockPlots' => PropertyBlockPlotsResource::collection($propertyBlockPlots),
             'message' => Session('message'),
         ]);
     }

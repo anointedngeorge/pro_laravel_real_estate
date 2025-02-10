@@ -11,6 +11,7 @@ use App\Http\Controllers\PropertyBlocksController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\PropertySalesController;
 use App\Http\Controllers\RealtorsController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -52,6 +53,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('client', ClientController::class);
     Route::resource('realtors', RealtorsController::class);
     Route::resource('propertysales', PropertySalesController::class);
+    Route::resource('settings', SettingsController::class);
 
     // 
     Route::resource('propertyblock', PropertyBlocksController::class);
@@ -61,6 +63,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         PropertySalesController::class,
         'sponsor'
     ])->name('propertysales.sponsor');
+
+    Route::get('/propertysales/propertyblocks/{property}', [
+        PropertySalesController::class,
+        'propertyBlocks'
+    ])->name('propertysales.propertyblocks');
+    // 
+    Route::get('/propertysales/propertyblockplots/{propertyblock}', [
+        PropertySalesController::class,
+        'propertyBlockPlots'
+    ])->name('propertysales.propertyblockplots');
+
     // commission
     Route::resource('commission', CommissionsController::class);
     Route::put('/commission/changestatus/{status}/{id}', [

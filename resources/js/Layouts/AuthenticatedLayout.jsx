@@ -4,6 +4,8 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import { IoSettingsSharp } from "react-icons/io5";
+
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
@@ -67,6 +69,16 @@ export default function AuthenticatedLayout({ header, children }) {
                                     active={route().current('commission.index')}
                                 >
                                     Commissions
+                                </NavLink>
+
+
+                                <NavLink
+                                    className='font-bold text-black text-red-500'
+                                    href={route('settings.index')}
+                                    active={route().current('settings.index')}
+                                >
+                                    <span><IoSettingsSharp className='mr-1' /></span>
+                                    Settings
                                 </NavLink>
                             </div>
                         </div>

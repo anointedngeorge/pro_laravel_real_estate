@@ -21,6 +21,7 @@ class PropertySales extends Model
         'second_generation',
         'third_generation',
         'sponsor_code',
+        'block_id',
     ];
     /** @use HasFactory<\Database\Factories\PropertySalesFactory> */
     use HasFactory;
@@ -51,6 +52,10 @@ class PropertySales extends Model
         return $this->BelongsTo(related: Realtors::class, foreignKey: 'third_generation');
     }
 
+    public function blockPlots()
+    {
+        return $this->belongsToMany(PropertyBlockPlots::class, 'property_sale_block_plot');
+    }
 
 
 }

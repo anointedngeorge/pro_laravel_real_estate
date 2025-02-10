@@ -6,12 +6,17 @@ use App\Http\Requests\StoreCommissionsRequest;
 use App\Http\Requests\StorePropertySalesRequest;
 use App\Http\Requests\UpdatePropertySalesRequest;
 use App\Http\Resources\ClientResource;
+use App\Http\Resources\PropertyBlockPlotsResource;
+use App\Http\Resources\PropertyBlockResource;
 use App\Http\Resources\PropertyResource;
 use App\Http\Resources\PropertySalesResource;
 use App\Http\Resources\RealtorsResource;
 use App\Models\Client;
 use App\Models\Commissions;
 use App\Models\Property;
+use App\Models\PropertyBlockPlots;
+use App\Models\PropertyBlocks;
+use App\Models\PropertySaleBlockPlot;
 use App\Models\PropertySales;
 use App\Models\Realtors;
 use App\Models\Referals;
@@ -58,6 +63,7 @@ class PropertySalesController extends Controller
     public function store(StorePropertySalesRequest $request)
     {
         $data = $request->validated();
+        // dd($request);
         $initial_amount = (float) $data['initial_amount_paid'];
         $amount = (float) $data['amount'];
         $client_id = $data['client_id'];
@@ -90,6 +96,13 @@ class PropertySalesController extends Controller
                 'third_generation_commission' => $third,
             ];
 
+            // register all associated plots
+            foreach ($data['block_plot_ids'] as $key) {
+                PropertySaleBlockPlot::create([
+                    'property_sale_id' => $sales->id,
+                    'block_plot_id' => $key,
+                ]);
+            }
             // create the commissions table
             Commissions::create($commission_request);
             return to_route('propertysales.index')->with('message', "Sales Record Created");
@@ -175,5 +188,34 @@ class PropertySalesController extends Controller
 
     }
 
+
+    public function propertyBlocks(Property $property)
+    {
+
+        $blocks = PropertyBlocks::query()->where('property_id', $property->id);
+        return Response::json([
+            'status' => $blocks->exists(),
+            'blocks' => PropertyBlockResource::collection($blocks->get()),
+        ]);
+
+    }
+
+
+    public function propertyBlockPlots(PropertyBlocks $propertyblock)
+    {
+        // Get block plot IDs that are already in the property_sale_block_plot table
+        $soldPlotIds = PropertySaleBlockPlot::pluck('block_plot_id')->toArray();
+
+        // Fetch block plots that are NOT in the property_sale_block_plot table
+        $blockplots = PropertyBlockPlots::query()
+            ->where('property_block_id', $propertyblock->id)
+            ->whereNotIn('id', $soldPlotIds) // Exclude sold plots
+            ->get();
+
+        return Response::json([
+            'status' => $blockplots->isNotEmpty(),
+            'blockPlots' => PropertyBlockPlotsResource::collection($blockplots),
+        ]);
+    }
 
 }

@@ -11,7 +11,7 @@ class StorePropertyBlockPlotsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class StorePropertyBlockPlotsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'max:255'],
+            'property_block_id' => ['exists:property_blocks,id', 'required'],
+            'property_id' => ['exists:properties,id', 'required']
         ];
     }
 }

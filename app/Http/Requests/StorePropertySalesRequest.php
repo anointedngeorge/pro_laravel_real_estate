@@ -20,7 +20,7 @@ class StorePropertySalesRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
 
-     
+
     public function rules(): array
     {
         return [
@@ -39,6 +39,10 @@ class StorePropertySalesRequest extends FormRequest
             'first_generation' => ['required', 'exists:realtors,id'],
             'second_generation' => ['required', 'exists:realtors,id'],
             'third_generation' => ['required', 'exists:realtors,id'],
+            'block_id' => ['required', 'exists:property_blocks,id'],
+            'block_plot_ids' => ['required', 'array'],
+            'block_plot_ids.*' => ['required', 'exists:property_block_plots,id'],
+
         ];
 
     }
