@@ -14,7 +14,7 @@ const TextForm = ({ setData, settings }) => {
 
 
     return (
-        <div className='mb-4'>
+        <div className='mb-4 grid grid-cols-2 gap-x-4 gap-y-4'>
             <div>
                 <label>Title</label>
                 <TextInput className='w-full p-2' type='text' defaultValue={settings['title']} onChange={e => setData('title', e.target.value)} />
@@ -56,6 +56,33 @@ const TextForm = ({ setData, settings }) => {
 }
 
 
+
+const ImageForm = ({ setData, settings }) => {
+
+
+    return (
+        <div>
+            <h3 className='text-lg text-red-500'>Images</h3>
+            <div className='mb-4 flex flex-row'>
+                <div>
+                    <picture>
+                        <img src={settings['logo'] ? settings['logo'] : "/images/logo.png"} alt="Company Logo" style={{ width: '60px', height: '60px' }} />
+                    </picture>
+                    <label>Logo</label>
+                    <TextInput className='w-full p-2' type='file' onChange={e => setData('logo', e.target.files[0])} />
+                </div>
+                <div>
+                    <picture>
+                        <img src={settings['favicon'] ? settings['logo'] : "/images/logo.png"} alt="Company Logo" style={{ width: '60px', height: '60px' }} />
+                    </picture>
+                    <label>Favicon Logo</label>
+                    <TextInput className='w-full p-2' type='file' onChange={e => setData('favicon', e.target.files[0])} />
+                </div>
+
+            </div>
+        </div>
+    );
+}
 
 
 
@@ -104,6 +131,7 @@ export default function index({ auth, settings_data }) {
                         <div className="p-6 text-gray-900">
                             <form onSubmit={onsubmit} >
                                 <TextForm setData={setData} settings={pagesettings} />
+                                <ImageForm setData={setData} settings={pagesettings} />
                                 <PrimaryButton>Update Settings</PrimaryButton>
                             </form>
 

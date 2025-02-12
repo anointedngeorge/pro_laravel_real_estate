@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSettingsRequest;
 use App\Http\Requests\UpdateSettingsRequest;
 use App\Models\Settings;
+use Storage;
+use Str;
 
 class SettingsController extends Controller
 {
@@ -33,14 +35,24 @@ class SettingsController extends Controller
     public function store(StoreSettingsRequest $request)
     {
         // Get all request keys
-        $keys = $request->keys();
-
-        foreach ($keys as $key) {
-            Settings::updateOrCreate(
-                ['name' => $key],
-                ['description' => $request->input($key)]
-            );
+        $st = Settings::whereIn('key', 'logo');
+        $image_logo = $request['logo'] ?? null;
+        if ($image_logo) {
+            // if ($realtor->image_path) {
+            //     Storage::disk('public')->deleteDirectory(dirname($realtor->image_path));
+            // }
+            // $request['logo'] = $image_logo->store('settings/' . Str::random(), 'public');
         }
+
+
+        dd(vars: $st);
+        $keys = $request->keys();
+        // foreach ($keys as $key) {
+        //     Settings::updateOrCreate(
+        //         ['name' => $key],
+        //         ['description' => $request->input($key)]
+        //     );
+        // }
         return to_route('settings.index')->with('message', 'Settings updated successfully.');
     }
 
