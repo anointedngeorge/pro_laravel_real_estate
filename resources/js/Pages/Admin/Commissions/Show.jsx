@@ -15,13 +15,15 @@ export default function show({ auth, commission }) {
         <AuthenticatedLayout
             users={auth.user}
             header={
-                <div className='flex justify-between'>
-                    <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        View <span className='text-amber-500 text-3xl'>{`${commission.property_sale_id.property_id.name}`}</span>
+                <div>
+                <h3 className="text-xl font-semibold leading-tight text-gray-800 w-full">Commission</h3>
+                    <div className='flex justify-between'>
+                        <p className="text-xl font-semibold leading-tight text-gray-800">
+                            View <span className='text-amber-500 text-3xl'>{`${commission.property_sale_id.property_id.name}`}</span>
+                        </p>
 
-                    </h2>
-
-                    <Link className='px-2 py-2 rounded items-center hover:bg-green-600 bg-green-500 text-white' href={route('commission.index')}>Back Commission</Link>
+                        <Link className='px-2 py-2 rounded items-center hover:bg-green-600 bg-green-500 text-white' href={route('commission.index')}>Back Commission</Link>
+                    </div>
                 </div>
             }
         >

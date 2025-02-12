@@ -22,6 +22,7 @@ class PropertySales extends Model
         'third_generation',
         'sponsor_code',
         'block_id',
+        'tracker'
     ];
     /** @use HasFactory<\Database\Factories\PropertySalesFactory> */
     use HasFactory;
@@ -55,6 +56,18 @@ class PropertySales extends Model
     public function blockPlots()
     {
         return $this->belongsToMany(PropertyBlockPlots::class, 'property_sale_block_plot');
+    }
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($propertySale) {
+            if (!$propertySale->tracker) {
+                $propertySale->tracker = now()->toDateString();
+            }
+        });
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PropertySaleEvent;
 use App\Http\Requests\StoreCommissionsRequest;
 use App\Http\Requests\StorePropertySalesRequest;
 use App\Http\Requests\UpdatePropertySalesRequest;
@@ -13,6 +14,7 @@ use App\Http\Resources\PropertySalesResource;
 use App\Http\Resources\RealtorsResource;
 use App\Models\Client;
 use App\Models\Commissions;
+use App\Models\DateTracker;
 use App\Models\Property;
 use App\Models\PropertyBlockPlots;
 use App\Models\PropertyBlocks;
@@ -105,6 +107,9 @@ class PropertySalesController extends Controller
             }
             // create the commissions table
             Commissions::create($commission_request);
+   
+            // fire up an event
+            PropertySaleEvent::dispatch($sales);
             return to_route('propertysales.index')->with('message', "Sales Record Created");
         }
 

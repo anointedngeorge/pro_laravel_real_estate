@@ -54,7 +54,7 @@ export default function show({ auth, propertysales }) {
                                     <h3 className='font-bold text-lg'>First Generation Information</h3>
                                     <ViewData
                                         objects={propertysales.first_generation}
-                                        exclude='id'
+                                        exclude='id, referralLink, image_path,first_name,last_name'
                                     />
                                 </div>
 
@@ -62,7 +62,7 @@ export default function show({ auth, propertysales }) {
                                     <h3 className='font-bold text-lg'>Second Generation Information</h3>
                                     <ViewData
                                         objects={propertysales.second_generation}
-                                        exclude='id'
+                                        exclude='id, referralLink, image_path,first_name,last_name'
                                     />
                                 </div>
 
@@ -70,13 +70,10 @@ export default function show({ auth, propertysales }) {
                                     <h3 className='font-bold text-lg'>Third Generation Information</h3>
                                     <ViewData
                                         objects={propertysales.third_generation}
-                                        exclude='id'
+                                        exclude='id, referralLink, image_path,first_name,last_name'
                                     />
                                 </div>
-
-
                             </div>
-
                         </div>
                     </div>
                 </div>

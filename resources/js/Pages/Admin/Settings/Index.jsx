@@ -2,37 +2,84 @@ import { Editbranch } from '@/Components/forms/Editbranch';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextAreaInput from '@/Components/TextAreaInput';
+import TextInput from '@/Components/TextInput';
 import { formatString } from '@/Functions';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
 
 
 
+const TextForm = ({ setData, settings }) => {
+
+
+    return (
+        <div className='mb-4'>
+            <div>
+                <label>Title</label>
+                <TextInput className='w-full p-2' type='text' defaultValue={settings['title']} onChange={e => setData('title', e.target.value)} />
+            </div>
+            <div>
+                <label>Dashboard Title</label>
+                <TextInput className='w-full p-2' type='text' defaultValue={settings['dashboard_title']} onChange={e => setData('dashboard_title', e.target.value)} />
+            </div>
+            <div>
+                <label>Phone</label>
+                <TextInput className='w-full p-2' type='text' defaultValue={settings['phone']} onChange={e => setData('phone', e.target.value)} />
+            </div>
+            <div>
+                <label>Address</label>
+                <TextInput className='w-full p-2' type='text' defaultValue={settings['address']} onChange={e => setData('address', e.target.value)} />
+            </div>
+
+            <div>
+                <label>Frist Generation Percentages</label>
+                <TextInput className='w-full p-2' type='text' defaultValue={settings['first_generation_percentage']} onChange={e => setData('first_generation_percentage', e.target.value)} />
+            </div>
+            <div>
+                <label>Second Generation Percentages</label>
+                <TextInput className='w-full p-2' type='text' defaultValue={settings['second_generation_percentage']} onChange={e => setData('second_generation_percentage', e.target.value)} />
+            </div>
+            <div>
+                <label>Third Generation Percentages</label>
+                <TextInput className='w-full p-2' type='text' defaultValue={settings['third_generation_percentage']} onChange={e => setData('third_generation_percentage', e.target.value)} />
+            </div>
+
+            <div>
+                <label>Login Form Title</label>
+                <TextInput className='w-full p-2' type='text' defaultValue={settings['login_form_title']} onChange={e => setData('login_form_title', e.target.value)} />
+            </div>
+
+
+        </div>
+    );
+}
 
 
 
 
 
-export default function index({ auth, settings }) {
+export default function index({ auth, settings_data }) {
 
     const { data, post, setData } = useForm();
+    const { settings: pagesettings } = usePage().props;
 
     const onsubmit = (e) => {
         e.preventDefault();
+        // console.log(data);
+
         post(route('settings.store'))
 
     }
 
-    const addMoreSettingsParameters = [
-        // { name: 'login_form_title', description: 'form title' },
-    ];
-
     useEffect(() => {
-        settings.map(item => {
-            setData(item.name, item.description)
-        })
-    }, [settings])
+        for (const key in pagesettings) {
+            if (Object.prototype.hasOwnProperty.call(pagesettings, key)) {
+                const element = pagesettings[key];
+                setData(key, element);
+            }
+        }
+    }, [pagesettings])
 
 
     return (
@@ -56,31 +103,7 @@ export default function index({ auth, settings }) {
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             <form onSubmit={onsubmit} >
-                                {settings.map((item, index) => (
-                                    <div key={index} className='mt-4 mb-8'>
-                                        <InputLabel
-                                            value={formatString(item.name)}
-                                            className='text-lg font-bold'
-                                        />
-                                        <TextAreaInput onChange={e => {
-                                            setData(item.name, e.target.value)
-                                        }} className="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" defaultValue={item.description}></TextAreaInput>
-                                    </div>
-                                ))}
-
-
-                                {addMoreSettingsParameters.map((item, index) => (
-                                    <div key={`more${index}`} className='mt-4 mb-8'>
-                                        <InputLabel
-                                            value={formatString(item.name)}
-                                            className='text-lg font-bold'
-                                        />
-                                        <TextAreaInput onChange={e => {
-                                            setData(item.name, e.target.value)
-                                        }} className="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" defaultValue={item.description}></TextAreaInput>
-                                    </div>
-                                ))}
-
+                                <TextForm setData={setData} settings={pagesettings} />
                                 <PrimaryButton>Update Settings</PrimaryButton>
                             </form>
 

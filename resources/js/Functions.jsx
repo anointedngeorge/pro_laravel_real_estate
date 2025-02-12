@@ -28,3 +28,14 @@ export function stringToArray(datastring) {
         .map(item => item.trim())
         .filter(item => item !== ""); // Remove empty values if necessary
 }
+
+
+export function copyToClipboard(text) {
+    navigator.clipboard.writeText(text)
+        .then(() => {
+            alert("Copied")
+        })
+        .catch(err => {
+            // console.error('Failed to copy: ', err);
+        });
+}

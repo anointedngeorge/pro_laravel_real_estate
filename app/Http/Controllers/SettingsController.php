@@ -15,7 +15,7 @@ class SettingsController extends Controller
     {
         $settings = Settings::all();
         return inertia('Admin/Settings/Index', [
-            'settings' => $settings,
+            'settings_data' => $settings,
         ]);
     }
 
