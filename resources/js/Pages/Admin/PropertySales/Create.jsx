@@ -8,7 +8,7 @@ import { Head, Link, usePage } from '@inertiajs/react';
 
 
 
-export default function edit({ ...pageData }) {
+export default function create({ ...pageData }) {
     const { settings } = usePage().props;
     return (
         <AuthenticatedLayout

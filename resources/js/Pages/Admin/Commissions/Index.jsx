@@ -155,7 +155,7 @@ export default function Propertysales({ ...pageData }) {
                                             {pageData.commissions.data.map((commission, index) => (
                                                 <tr key={commission.id}>
                                                     <TableRow>{index + 1}</TableRow>
-                                                    <TableRow>{commission.property_sale_id.property_id.name}</TableRow>
+                                                    <TableRow>{commission.property_sale_id?.property_id.name}</TableRow>
 
                                                     <TableRow>{commission.client_id.fullname}</TableRow>
                                                     <TableRow>{MoneyFormat({ amount: commission.amount_paid })}</TableRow>

@@ -8,15 +8,16 @@ const FormHead = ({ settings }) => {
     return (
         <div className="flex flex-wrap items-center justify-between mb-8 gap-4 bg-red-600 p-2">
             {/* Logo */}
+
             <div className="shrink-0">
-                <img src="/images/logo.png" alt="logo_image" className="w-16 h-16 md:w-20 md:h-20 object-contain" />
+                <img src={settings['logo'] ? `/storage/${settings['logo']}` : "/images/logo.png"} alt="logo_image" className="w-16 h-16 md:w-20 md:h-20 object-contain" />
             </div>
 
             {/* Centered Text Content */}
             <div className="text-center md:text-left flex-1">
-                <h3 className="text-xl md:text-2xl font-bold text-white text-center">{settings['title']}</h3>
-                <p className="text-sm md:text-base text-center text-slate-300">{settings['address']}</p>
-                <p className="text-sm md:text-base text-center text-slate-300">{settings['phone']}</p>
+                <h3 className="text-xl md:text-3xl font-bold text-white text-center">{settings['title']}</h3>
+                <p className="text-sm md:text-base text-center text-slate-100">{settings['address']}</p>
+                <p className="text-sm md:text-base text-center text-slate-100">{settings['phone']}</p>
 
             </div>
 
@@ -46,7 +47,7 @@ const FormFooter = () => {
 
 
 
-export default function referralLink({ sponsor_code, realtor }) {
+export default function referralLink({ sponsor_code, realtor, message }) {
     const { settings } = usePage().props;
     const { data, setData, post, errors, processing } = useForm({
         first_name: '',
@@ -63,13 +64,15 @@ export default function referralLink({ sponsor_code, realtor }) {
 
     const onFormSubmit = (e) => {
         e.preventDefault();
-        post(route('realtors.store'));
+        post(route('frontend.realtorreferrals'));
     };
-
 
 
     return (
         <main className="mt-8">
+            {message && (
+                <div className="p-3 bg-green-500 text-white">{message}</div>
+            )}
             <Head title={`${realtor.fullname} Referral Page `} />
             <div className="w-3/4 m-auto p-3 bg-red-50">
                 <form onSubmit={onFormSubmit} >

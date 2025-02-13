@@ -1,24 +1,20 @@
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
-import { useForm } from '@inertiajs/react';
-import PrimaryButton from '../PrimaryButton';
 import SelectInput from '../SelectInput';
 import TextAreaInput from '../TextAreaInput';
+import { useEffect } from 'react';
 
 export function CreateRealtorReferralForm({ setData, data, errors, realtor }) {
-
-
-
 
     // Define dynamic form structure with various field types
     const prepareForm = [
         [
             {
-                name: `sponsor_code`,
-                label: `Sponsor Code: ${realtor.fullname}`,
+                name: `sponsored_code`,
+                label: `Sponsored Code: ${realtor.fullname}`,
                 type: 'text',
-                params: { 'placeholder': 'Sponsor Code', 'defaultValue': realtor.sponsor_code, 'readOnly': true }
+                params: { 'placeholder': 'Sponsored Code', 'value': realtor.sponsor_code, 'readOnly': true }
             },
         ],
         [
@@ -80,6 +76,10 @@ export function CreateRealtorReferralForm({ setData, data, errors, realtor }) {
         }
 
     }
+
+    useEffect(() => {
+        setData("sponsored_code", realtor.sponsor_code);
+    }, [realtor])
 
     return (
         <div >

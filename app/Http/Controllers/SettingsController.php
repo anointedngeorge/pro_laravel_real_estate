@@ -35,24 +35,41 @@ class SettingsController extends Controller
     public function store(StoreSettingsRequest $request)
     {
         // Get all request keys
-        $st = Settings::whereIn('key', 'logo');
+        $logo = Settings::where('name', 'logo');
+        $favicon = Settings::where('name', 'favicon');
         $image_logo = $request['logo'] ?? null;
+        $image_favicon = $request['favicon'] ?? null;
+
+        // dd($image_logo);
         if ($image_logo) {
-            // if ($realtor->image_path) {
-            //     Storage::disk('public')->deleteDirectory(dirname($realtor->image_path));
-            // }
-            // $request['logo'] = $image_logo->store('settings/' . Str::random(), 'public');
+            $st_found = $logo->first();
+            if ($logo->exists()) {
+                // remove logo if it exists
+                Storage::disk('public')->deleteDirectory(dirname($st_found->description));
+            }
+            $request['logo'] = $image_logo->store('settings/' . Str::random(), 'public');
+        }
+
+        // perform for image favicon
+        if ($image_favicon) {
+            $st_found = $favicon->first();
+            if ($favicon->exists()) {
+                // remove logo if it exists
+                Storage::disk('public')->deleteDirectory(dirname($st_found->description));
+            }
+            // 
+            $request['favicon'] = $image_favicon->store('settings/' . Str::random(), 'public');
         }
 
 
-        dd(vars: $st);
+        // dd(vars: $st);
         $keys = $request->keys();
-        // foreach ($keys as $key) {
-        //     Settings::updateOrCreate(
-        //         ['name' => $key],
-        //         ['description' => $request->input($key)]
-        //     );
-        // }
+        foreach ($keys as $key) {
+            Settings::updateOrCreate(
+                ['name' => $key],
+                ['description' => $request->input($key)]
+            );
+        }
         return to_route('settings.index')->with('message', 'Settings updated successfully.');
     }
 

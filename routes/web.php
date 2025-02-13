@@ -52,6 +52,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('branch', BranchController::class);
     Route::resource('client', ClientController::class);
     Route::resource('realtors', RealtorsController::class);
+
     Route::resource('propertysales', PropertySalesController::class);
     Route::resource('settings', SettingsController::class);
 
@@ -95,4 +96,28 @@ require __DIR__ . '/auth.php';
 
 // frontend routes
 
+
+
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
+
+
+Route::get("/", [FrontendController::class, 'index'])->name('frontend.index');
+
 Route::get("/realtors/referral/{sponsor_code}", [FrontendController::class, 'referralLink'])->name('frontend.referralLink');
+Route::post('/realtors/referrals', [
+    FrontendController::class,
+    'realtorReferrals'
+])->name('frontend.realtorreferrals');
+
+
+Route::get('/realtors/referrals/confirmation', [
+    FrontendController::class,
+    'Confirmation'
+])->name('frontend.confirmation');

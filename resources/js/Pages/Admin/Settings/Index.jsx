@@ -1,6 +1,7 @@
 import { Editbranch } from '@/Components/forms/Editbranch';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
+import SelectInput from '@/Components/SelectInput';
 import TextAreaInput from '@/Components/TextAreaInput';
 import TextInput from '@/Components/TextInput';
 import { formatString } from '@/Functions';
@@ -50,6 +51,14 @@ const TextForm = ({ setData, settings }) => {
                 <TextInput className='w-full p-2' type='text' defaultValue={settings['login_form_title']} onChange={e => setData('login_form_title', e.target.value)} />
             </div>
 
+            <div>
+                <label>Choose Website</label>
+                <SelectInput className="w-full" onChange={e => setData('website', e.target.value)}>
+                    <option value="Default"></option>
+                    <option value="Wello">Wello</option>
+                    <option value="Nero">Nero</option>
+                </SelectInput>
+            </div>
 
         </div>
     );
@@ -62,18 +71,20 @@ const ImageForm = ({ setData, settings }) => {
 
     return (
         <div>
+
             <h3 className='text-lg text-red-500'>Images</h3>
             <div className='mb-4 flex flex-row'>
                 <div>
+
                     <picture>
-                        <img src={settings['logo'] ? settings['logo'] : "/images/logo.png"} alt="Company Logo" style={{ width: '60px', height: '60px' }} />
+                        <img src={settings['logo'] ? `storage/${settings['logo']}` : "/images/logo.png"} alt="Logo" style={{ width: '60px', height: '60px' }} />
                     </picture>
                     <label>Logo</label>
                     <TextInput className='w-full p-2' type='file' onChange={e => setData('logo', e.target.files[0])} />
                 </div>
                 <div>
                     <picture>
-                        <img src={settings['favicon'] ? settings['logo'] : "/images/logo.png"} alt="Company Logo" style={{ width: '60px', height: '60px' }} />
+                        <img src={settings['favicon'] ? `storage/${settings['favicon']}` : "/images/logo.png"} alt="Favicon" style={{ width: '60px', height: '60px' }} />
                     </picture>
                     <label>Favicon Logo</label>
                     <TextInput className='w-full p-2' type='file' onChange={e => setData('favicon', e.target.files[0])} />
@@ -103,7 +114,9 @@ export default function index({ auth, settings_data }) {
         for (const key in pagesettings) {
             if (Object.prototype.hasOwnProperty.call(pagesettings, key)) {
                 const element = pagesettings[key];
-                setData(key, element);
+                if ((key !== 'logo') && (key !== 'favicon')) {
+                    setData(key, element);
+                }
             }
         }
     }, [pagesettings])
