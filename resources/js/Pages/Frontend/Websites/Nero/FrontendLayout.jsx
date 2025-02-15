@@ -73,13 +73,13 @@ export default function FrontendLayout({ children, assetmodules = {}, title = 'N
                             </div>
                             <div className="col-xl-6 col-lg-6 col-md-6 d-none d-lg-block">
                                 <div className="topbar-text text-center">
-                                    <p>Use moosend's email marketing features for free!<a href="about.html">Read More..</a></p>
+                                    <p>{settings['title']}</p>
                                 </div>
                             </div>
                             <div className="col-xl-3 col-lg-3 col-md-6 col-sm-6">
                                 <div className="topbar-right">
                                     <span>Free Call:</span>
-                                    <a href="tel:+44(650)5522">+44 (650) 5522</a>
+                                    <a href={settings['phone']} >{settings['phone']}</a>
                                 </div>
                             </div>
                         </div>
@@ -169,7 +169,7 @@ export default function FrontendLayout({ children, assetmodules = {}, title = 'N
             </header>
 
             {/*side bar*/}
-            <NeroAside />
+            <NeroAside settings={settings} />
             {children}
             <footer>
                 <div className="footer__area footer-bg pt-100 pb-50">

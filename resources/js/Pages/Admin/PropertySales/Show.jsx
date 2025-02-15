@@ -17,7 +17,7 @@ export default function show({ auth, propertysales }) {
             header={
                 <div className='flex justify-between'>
                     <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                        View Propertysales <span className='text-amber-500 text-3xl'>{`${propertysales.property_id.name}`}</span> details
+                        Propertysales <span className='text-amber-500 text-3xl'>{`${propertysales.property_id.name}`}</span>
                     </h2>
                     <Link className='px-2 py-2 rounded items-center hover:bg-green-600 bg-green-500 text-white' href={route('propertysales.index')}>Property Sales</Link>
                 </div>
@@ -37,12 +37,18 @@ export default function show({ auth, propertysales }) {
                             <div className='grid grid-cols-2 gap-x-6 justify-between'>
                                 <div>
                                     <h3 className='font-bold text-lg'>Property Information</h3>
-                                    <ViewData objects={propertysales.property_id} />
+                                    <ViewData
+                                        objects={propertysales.property_id}
+                                        exclude='id'
+                                    />
                                 </div>
 
                                 <div >
                                     <h3 className='font-bold text-lg'>Owner's Information (Client)</h3>
-                                    <ViewData objects={propertysales.client_id} />
+                                    <ViewData
+                                        objects={propertysales.client_id}
+                                        exclude='id'
+                                    />
                                 </div>
                             </div>
 

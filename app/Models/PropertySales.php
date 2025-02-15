@@ -71,4 +71,13 @@ class PropertySales extends Model
     }
 
 
+
+    public function balance()
+    {
+        $balance = (int) $this->amount - (int) $this->initial_amount_paid;
+        return $balance;
+
+    }
+
+
 }

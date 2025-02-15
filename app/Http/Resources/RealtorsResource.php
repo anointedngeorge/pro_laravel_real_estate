@@ -18,6 +18,7 @@ class RealtorsResource extends JsonResource
     public static $wrap = false;
     public function toArray(Request $request): array
     {
+        $status = !empty($this->status) ? $this->status : 'regular';
         return [
             'id' => $this->id,
             'first_name' => $this->first_name,
@@ -32,7 +33,7 @@ class RealtorsResource extends JsonResource
             'bank_name' => $this->bank_name,
             'address' => $this->address,
             'country' => $this->country,
-
+            'status' => $status,
             'created_at' => (new Carbon($this->created_at))->format('Y-m-d'),
             'updated_at' => (new Carbon($this->due_date))->format('Y-m-d'),
         ];

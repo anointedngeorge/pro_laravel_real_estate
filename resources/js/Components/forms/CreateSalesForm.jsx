@@ -33,6 +33,8 @@ export function CreateSalesForm({
         third_generation: '',
     });
 
+    // update amount
+    const [amount, setAmount] = useState(0);
 
     // 
     const [sponsor, setSponsor] = useState({
@@ -57,9 +59,7 @@ export function CreateSalesForm({
 
     const onFormSubmit = (e) => {
         e.preventDefault();
-        console.log(data);
-
-        post(route('propertysales.store'))
+        post(route('propertysales.store'));
     }
 
     const fetchSponsor = async (code) => {
@@ -139,12 +139,11 @@ export function CreateSalesForm({
         setData,
     ])
 
-
     return (
         <div>
             <form onSubmit={onFormSubmit} >
                 <div>
-                    <div className='grid grid-cols-3 gap-2 mb-2'>
+                    <div className='grid grid-cols-2 gap-2 mb-2'>
                         <div>
                             <InputLabel
                                 htmlFor="property_listing"
@@ -182,7 +181,9 @@ export function CreateSalesForm({
                             </SelectInput>
                             <InputError message={errors.client_id} className="mt-2" />
                         </div>
+                    </div>
 
+                    <div className='grid grid-cols-1 gap-2'>
                         <div>
                             <InputLabel
                                 htmlFor="block_plot_id"
@@ -205,10 +206,6 @@ export function CreateSalesForm({
                             </SelectInput>
                             <InputError message={errors.client_id} className="mt-2" />
                         </div>
-
-
-
-
                     </div>
 
                     <div className='grid grid-cols-4 gap-2'>
@@ -234,15 +231,19 @@ export function CreateSalesForm({
                         <div>
                             <InputLabel
                                 htmlFor="amount"
-                                value="Amount"
+                                value={`Amount ${MoneyFormat({ amount: amount })}`}
                             />
+
                             <TextInput
                                 id="amount"
                                 type="number"
                                 required={true}
-
                                 className="mt-1 block w-full"
-                                onKeyUp={(e) => setData("amount", e.target.value)}
+                                onKeyUp={(e) => {
+                                    const amt = data.quantity ? parseInt(e.target.value) * parseInt(data.quantity) : e.target.value;
+                                    setAmount(amt)
+                                    setData("amount", amt);
+                                }}
                             />
                             <InputError message={errors.amount} className="mt-2" />
                         </div>
@@ -274,7 +275,12 @@ export function CreateSalesForm({
                                 required={true}
 
                                 className="mt-1 block w-full"
-                                onKeyUp={(e) => setData("quantity", e.target.value)}
+                                onKeyUp={(e) => {
+                                    setData("quantity", e.target.value);
+                                    const amt = data.amount ? parseInt(data.amount) * parseInt(e.target.value) : data.amount;
+                                    setAmount(amt)
+                                    setData("amount", amt);
+                                }}
                             />
                             <InputError message={errors.quantity} className="mt-2" />
                         </div>

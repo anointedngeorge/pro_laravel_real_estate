@@ -3,6 +3,7 @@ import InputLabel from '@/Components/InputLabel';
 import Pagination from '@/Components/Pagination';
 import SelectInput from '@/Components/SelectInput';
 import TextInput from '@/Components/TextInput';
+import { REALTORS_STATUS_MAP } from '@/Constants';
 import { rangeGenerator } from '@/Functions';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
@@ -66,6 +67,14 @@ export default function Realtors({ ...pageData }) {
 
     const onDestroy = (object) => {
         router.delete(route('realtors.destroy', object.id));
+    }
+
+    //  Js function in laravel
+    const changeRealtorStatus = (status, id) => {
+        router.put(route('realtors.changestatus', {
+            status: status,
+            id: id,
+        }));
     }
 
     return (
@@ -134,8 +143,8 @@ export default function Realtors({ ...pageData }) {
                                             <TableHeading>ID</TableHeading>
                                             <TableHeading>Picture</TableHeading>
                                             <TableHeading>Fullname</TableHeading>
-                                            <TableHeading>Sponsor</TableHeading>
-
+                                            <TableHeading>Referral Code</TableHeading>
+                                            <TableHeading>Status</TableHeading>
                                             <TableHeading>Actions</TableHeading>
                                         </tr>
                                     </thead>
@@ -151,14 +160,16 @@ export default function Realtors({ ...pageData }) {
                                                     />
                                                 </TableRow>
                                                 <TableRow>{realtor.fullname}</TableRow>
-                                                <TableRow>{realtor.sponsor_code}</TableRow>
-                                                {/* <TableRow>
-                                                    <select >
-                                                        <option value="">{"Don't"}</option>
-                                                        <option value="yes">Yes</option>
-                                                        <option value="no">No</option>
+                                                <TableRow><code>{realtor.sponsor_code}</code></TableRow>
+                                                <TableRow>
+
+                                                    <p className='text-red-500'>{REALTORS_STATUS_MAP[realtor.status]}</p>
+                                                    <select onChange={e => changeRealtorStatus(e.target.value, realtor.id)}>
+                                                        <option>Choose</option>
+                                                        <option value="regular">Regular</option>
+                                                        <option value="executive">Executive</option>
                                                     </select>
-                                                </TableRow> */}
+                                                </TableRow>
                                                 <TableRow>
                                                     <ul className='text-nowrap flex gap-x-2 px-2 py-3'>
                                                         <li>

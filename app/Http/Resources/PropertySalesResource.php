@@ -21,6 +21,7 @@ class PropertySalesResource extends JsonResource
             'client_id' => new ClientResource($this->propertyclient),
             'quantity' => $this->quantity,
             'amount' => $this->amount,
+            'balance' => $this->balance(),
             'initial_amount_paid' => $this->initial_amount_paid,
             'first_generation_commission' => $this->first_generation_commission,
             'second_generation_commission' => $this->second_generation_commission,

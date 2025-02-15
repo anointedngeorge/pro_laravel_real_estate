@@ -80,7 +80,7 @@ export default function Propertysales({ ...pageData }) {
             header={
                 <div className='flex justify-between'>
                     <h2 className="text-xl font-semibold leading-tight text-amber-500">
-                        Commission Page
+                        Commissions
                     </h2>
                     {/* <Link className='px-2 py-2 rounded items-center hover:bg-green-600 bg-green-500 text-white' href={route('commission.create')}>New Sales</Link> */}
                 </div>

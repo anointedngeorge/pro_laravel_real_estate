@@ -1,6 +1,6 @@
 
 
-export const NeroLogo = ({ width = '60px', height = '60px', settings }) => {
+export const NeroLogo = ({ width = '75px', height = '75px', settings }) => {
     return (
         <img
             style={{ width: width, height: height }}

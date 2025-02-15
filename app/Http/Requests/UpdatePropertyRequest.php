@@ -23,6 +23,8 @@ class UpdatePropertyRequest extends FormRequest
     {
         return [
             'quantity' => ['required', 'integer'],
+            'name' => ['required', 'string'],
+            'description' => ['nullable', 'string'],
         ];
     }
 }

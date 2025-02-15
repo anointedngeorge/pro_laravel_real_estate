@@ -1,5 +1,6 @@
 
 import { ViewData } from '@/Components/ViewData';
+import { MoneyFormat } from '@/Functions';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
 
@@ -8,7 +9,7 @@ import { Head, Link } from '@inertiajs/react';
 
 
 
-export default function show({ auth, client }) {
+export default function show({ auth, client, properties }) {
 
     return (
         <AuthenticatedLayout
@@ -27,13 +28,41 @@ export default function show({ auth, client }) {
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900 grid grid-cols-2">
+                        <div className="p-6 text-gray-900 grid grid-cols-1">
                             <div>
                                 <ViewData objects={client} />
                             </div>
-                            <div>
-                                Total Referred
-                                <h1 className='font-bold text-2xl'>400 Referrals</h1>
+                        </div>
+
+
+                        <div className="p-6 text-gray-900 grid grid-cols-1">
+                            <hr />
+                            <div className='w-auto'>
+                                <h1 className='font-bold text-2xl'>Properties Purchased</h1>
+                                <table className='w-full text-left p-2'>
+                                    <thead>
+                                        <tr>
+                                            <th>Property</th>
+                                            <th>Plot Quantity</th>
+                                            
+                                            <th>Initial Payment</th>
+                                            <th>Balance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {properties.data.map((property, index) => (
+                                            <tr key={index}>
+                                                <td className='text-red-600'>{property.property_id.name}</td>
+                                                <td>{property.quantity}</td>
+                                              
+                                                <td>{MoneyFormat({amount:property.initial_amount_paid})}</td>
+                                                <td>{MoneyFormat({amount:property.balance})}</td>
+                                            </tr>
+                                        ))}
+
+                                    </tbody>
+                                    </table>
+                                <hr />
                             </div>
                         </div>
                     </div>

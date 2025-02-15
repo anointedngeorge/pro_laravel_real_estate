@@ -25,7 +25,7 @@ class PropertyController extends Controller
         $queryParams = Request::query();
 
 
-        $limit = Request('limit') ? Request('limit') : 10;
+        $limit = Request('limit') ?? 10;
         $query = Property::query()->paginate(perPage: $limit);
 
         // 
@@ -41,7 +41,7 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -87,12 +87,14 @@ class PropertyController extends Controller
      */
     public function update(UpdatePropertyRequest $request, Property $property)
     {
+
         $data = $request->validated();
         $name = $property->name;
         // remove file if it exists
         if ($property->image_path) {
             Storage::disk('public')->deleteDirectory(dirname($property->image_path));
         }
+
         $property->update($data);
         return to_route('property.index')->with('message', "Property $name was updated");
         ;
@@ -114,9 +116,9 @@ class PropertyController extends Controller
 
     public function propertyBlocks(Property $property)
     {
-        $mypro = new PropertyResource($property);
+        $available_property = new PropertyResource($property);
         return inertia('Admin/Property/CreateBlocks', [
-            'property' => $mypro,
+            'property' => $available_property,
         ]);
     }
 

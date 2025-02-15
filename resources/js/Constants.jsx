@@ -7,3 +7,9 @@ export const COMMISSION_STATUS_MAP = {
     'unpaid': 'UNPAID',
     'Unpaid': 'UNPAID',
 };
+
+
+export const REALTORS_STATUS_MAP = {
+    'regular': 'REGULAR',
+    'executive': 'EXECUTIVE',
+};

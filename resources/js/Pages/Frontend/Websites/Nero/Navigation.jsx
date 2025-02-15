@@ -1,6 +1,7 @@
+import { NeroLogo } from "./Logo";
 
 
-export const NeroAside = () => {
+export const NeroAside = ({settings}) => {
     return (
         <div className="sidebar__area">
             <div className="sidebar__wrapper">
@@ -16,7 +17,7 @@ export const NeroAside = () => {
                     </div>
                     <div className="logo">
                         <a href="index.html">
-                            <img src="../nero/img/logo/logo-black.png" alt="logo" />
+                            <NeroLogo settings={settings} />
                         </a>
                     </div>
                 </div>

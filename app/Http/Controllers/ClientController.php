@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 use App\Http\Resources\ClientResource;
+use App\Http\Resources\PropertySalesResource;
 use App\Models\Client;
 use Request;
 
@@ -18,7 +19,7 @@ class ClientController extends Controller
         $queryParams = Request::query();
 
 
-        $limit = Request('limit') ? Request('limit') : 10;
+        $limit = Request('limit') ?? 20;
         $query = Client::query()->paginate(perPage: $limit);
 
         // 
@@ -52,7 +53,7 @@ class ClientController extends Controller
     {
         return inertia('Admin/Client/Show', [
             'client' => new ClientResource($client),
-
+            'properties' => PropertySalesResource::collection($client->propertySales)
         ]);
     }
 

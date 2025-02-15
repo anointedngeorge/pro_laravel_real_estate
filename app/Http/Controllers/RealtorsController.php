@@ -124,4 +124,11 @@ class RealtorsController extends Controller
         return to_route('realtors.index')->with('message', "Realtor $name was deleted.");
     }
 
+
+    public function changeRealtorsStatus($status, $id)
+    {
+        Realtors::query()->where('id', $id)->update(['status' => $status]);
+        return to_route('realtors.index')->with('message', "Status Updated {$status}");
+    }
+
 }

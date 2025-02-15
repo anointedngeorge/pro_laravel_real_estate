@@ -1,3 +1,6 @@
+import '../../../css/app.css';
+import '../../bootstrap';
+
 import { CreateRealtorReferralForm } from "@/Components/forms/CreateRealtorReferralForm";
 import PrimaryButton from "@/Components/PrimaryButton";
 import { Head, useForm, usePage } from "@inertiajs/react";

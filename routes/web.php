@@ -38,46 +38,50 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     // 
-    Route::resource('property', PropertyController::class);
+    Route::resource('/dashboard/property', PropertyController::class);
     Route::get(
-        'property/clients/{property}',
+        '/dashboard/property/clients/{property}',
         [PropertyController::class, 'propertyClients']
     )->name('property.clients');
 
     Route::get(
-        'property/blocks/{property}',
+        '/dashboard/property/blocks/{property}',
         [PropertyController::class, 'propertyBlocks']
     )->name('property.blocks');
     // 
-    Route::resource('branch', BranchController::class);
-    Route::resource('client', ClientController::class);
-    Route::resource('realtors', RealtorsController::class);
+    Route::resource('/dashboard/branch', BranchController::class);
+    Route::resource('/dashboard/client', ClientController::class);
+    Route::resource('dashboard/realtors', RealtorsController::class);
+    Route::put('/dashboard/realtors/changestatus/{status}/{id}', [
+        RealtorsController::class,
+        'changeRealtorsStatus'
+    ])->name('realtors.changestatus');
 
-    Route::resource('propertysales', PropertySalesController::class);
-    Route::resource('settings', SettingsController::class);
+    Route::resource('/dashboard/propertysales', PropertySalesController::class);
+    Route::resource('/dashboard/settings', SettingsController::class);
 
     // 
-    Route::resource('propertyblock', PropertyBlocksController::class);
-    Route::resource('propertyblockplot', PropertyBlockPlotsController::class);
+    Route::resource('/dashboard/propertyblock', PropertyBlocksController::class);
+    Route::resource('/dashboard/propertyblockplot', PropertyBlockPlotsController::class);
     // 
-    Route::get('/propertysales/sponsor/{sponsor}', [
+    Route::get('/dashboard/propertysales/sponsor/{sponsor}', [
         PropertySalesController::class,
         'sponsor'
     ])->name('propertysales.sponsor');
 
-    Route::get('/propertysales/propertyblocks/{property}', [
+    Route::get('/dashboard/propertysales/propertyblocks/{property}', [
         PropertySalesController::class,
         'propertyBlocks'
     ])->name('propertysales.propertyblocks');
     // 
-    Route::get('/propertysales/propertyblockplots/{propertyblock}', [
+    Route::get('/dashboard/propertysales/propertyblockplots/{propertyblock}', [
         PropertySalesController::class,
         'propertyBlockPlots'
     ])->name('propertysales.propertyblockplots');
 
     // commission
-    Route::resource('commission', CommissionsController::class);
-    Route::put('/commission/changestatus/{status}/{id}', [
+    Route::resource('/dashboard/commission', CommissionsController::class);
+    Route::put('/dashboard/commission/changestatus/{status}/{id}', [
         CommissionsController::class,
         'changeCommissionStatus'
     ])->name('commission.changestatus');
@@ -86,9 +90,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/dashboard/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/dashboard/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/dashboard/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__ . '/auth.php';
