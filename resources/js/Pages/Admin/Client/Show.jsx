@@ -1,15 +1,103 @@
 
+import InputLabel from '@/Components/InputLabel';
+import Modal from '@/Components/Modal';
+import PrimaryButton from '@/Components/PrimaryButton';
+import TextInput from '@/Components/TextInput';
 import { ViewData } from '@/Components/ViewData';
 import { MoneyFormat } from '@/Functions';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 
+
+
+const PayContent = ({ pagedata, closeModal = () => { } }) => {
+    const { data, setData, post, errors } = useForm();
+
+    const onSubmitForm = (e) => {
+        e.preventDefault();
+        post(route('propertysales.ledger', pagedata.id));
+        // console.log(data);
+
+    }
+
+    return (
+        <div>
+            <div className='w-full p-2'>
+                <div className='flex justify-end'><span onClick={closeModal} className='cursor-pointer'>Close</span></div>
+            </div>
+            <div>
+                <div className='flex flex-col  justify-end p-3'>
+                    <span>{pagedata && pagedata.property_id && pagedata.property_id.name}</span>
+
+                    <strong>Balance: {MoneyFormat({ amount: pagedata.balance })}</strong>
+                </div>
+
+                <div className='flex flex-col gap-y-2 p-3'>
+
+                    <form onSubmit={onSubmitForm} >
+                        <div>
+                            <InputLabel value={`Enter Amount`} htmlFor={'amount'} />
+                            <TextInput type="number" className='w-full p-3' onKeyUp={e => setData('amount_paid', e.target.value)} defaultValue={0} />
+                        </div>
+                        <div className='mt-4'>
+                            <PrimaryButton>Submit</PrimaryButton>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <div className='w-full p-2'>
+                <div className='flex justify-end'><span onClick={closeModal} className='cursor-pointer'>Close</span></div>
+            </div>
+        </div>
+    );
+}
+
+const HistoryContent = ({ pagedata, closeModal = () => { } }) => {
+    return (
+        <div>
+            <div className='w-full p-2'>
+                <div className='flex justify-end'><span onClick={closeModal} className='cursor-pointer'>Close</span></div>
+            </div>
+            <div>
+                <div className='flex flex-col  justify-end p-3'>
+                    <span>{pagedata && pagedata.property_id && pagedata.property_id.name}</span>
+
+                    <strong>Balance: {MoneyFormat({ amount: pagedata.balance })}</strong>
+                </div>
+
+                <div className='flex flex-col gap-y-2 p-3'>
+                    <pre>{JSON.stringify(pagedata, undefined, 2)}</pre>
+                </div>
+
+            </div>
+
+            <div className='w-full p-2'>
+                <div className='flex justify-end'><span onClick={closeModal} className='cursor-pointer'>Close</span></div>
+            </div>
+        </div>
+    );
+}
 
 
 
 
 
 export default function show({ auth, client, properties }) {
+
+    const [clxModal, setClxModal] = useState(false);
+    const [pagedata, setPageData] = useState({});
+    const [page, setPage] = useState('');
+
+    const closeModal = () => {
+        let st = clxModal ? false : true;
+        setClxModal(st);
+    }
+
+
+
 
     return (
         <AuthenticatedLayout
@@ -35,7 +123,7 @@ export default function show({ auth, client, properties }) {
                         </div>
 
 
-                        <div className="p-6 text-gray-900 grid grid-cols-1">
+                        <div className="p-6 text-gray-900 grid grid-cols-1 mt-8">
                             <hr />
                             <div className='w-auto'>
                                 <h1 className='font-bold text-2xl'>Properties Purchased</h1>
@@ -44,9 +132,10 @@ export default function show({ auth, client, properties }) {
                                         <tr>
                                             <th>Property</th>
                                             <th>Plot Quantity</th>
-                                            
+
                                             <th>Initial Payment</th>
                                             <th>Balance</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -54,15 +143,41 @@ export default function show({ auth, client, properties }) {
                                             <tr key={index}>
                                                 <td className='text-red-600'>{property.property_id.name}</td>
                                                 <td>{property.quantity}</td>
-                                              
-                                                <td>{MoneyFormat({amount:property.initial_amount_paid})}</td>
-                                                <td>{MoneyFormat({amount:property.balance})}</td>
+
+                                                <td>{MoneyFormat({ amount: property.initial_amount_paid })}</td>
+                                                <td>{MoneyFormat({ amount: property.balance })}</td>
+                                                <td>
+                                                    <div className='w-auto text-nowrap flex gap-x-1 '>
+                                                        <button onClick={e => {
+                                                            setPageData(property)
+                                                            setPage('pay')
+                                                            setClxModal(true);
+                                                        }} className='bg-green-500 text-white px-4 py-1 rounded'>Pay</button>
+                                                        <button onClick={e => {
+                                                            setPageData(property)
+                                                            setPage('history')
+                                                            setClxModal(true);
+                                                        }} className='bg-orange-500 text-white px-4 py-1 rounded'>Histories</button>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         ))}
 
                                     </tbody>
-                                    </table>
+                                </table>
                                 <hr />
+                                {/* modal*/}
+
+                                <Modal show={clxModal} closeable={true}  >
+                                    {page === 'pay' ? (
+                                        <PayContent pagedata={pagedata} closeModal={closeModal} />
+                                    ) : page === 'history' ? (
+                                        <HistoryContent pagedata={pagedata} closeModal={closeModal} />
+                                    ) : (
+                                        <p>No content available</p>
+                                    )}
+                                </Modal>
+
                             </div>
                         </div>
                     </div>

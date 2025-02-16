@@ -13,6 +13,7 @@ use App\Http\Resources\PropertyResource;
 use App\Http\Resources\PropertySalesResource;
 use App\Http\Resources\RealtorsResource;
 use App\Models\Client;
+use App\Models\ClientsLedger;
 use App\Models\Commissions;
 use App\Models\DateTracker;
 use App\Models\Property;
@@ -22,6 +23,8 @@ use App\Models\PropertySaleBlockPlot;
 use App\Models\PropertySales;
 use App\Models\Realtors;
 use App\Models\Referals;
+
+use Illuminate\Http\Request as Requests;
 use Request;
 use Response;
 
@@ -107,7 +110,7 @@ class PropertySalesController extends Controller
             }
             // create the commissions table
             Commissions::create($commission_request);
-   
+
             // fire up an event
             PropertySaleEvent::dispatch($sales);
             return to_route('propertysales.index')->with('message', "Sales Record Created");
@@ -149,6 +152,24 @@ class PropertySalesController extends Controller
     {
         //
     }
+    public function PropertySalesLedger(Requests $request, PropertySales $propertysale)
+    {
+        $incomingAmount = $request->input('amount_paid');
+        $client_id = $propertysale->client_id;
+        $amount = $propertysale->amount;
+        $id = $propertysale->id;
+        $ledgerTotalAmountPaid = (float) ClientsLedger::where([
+            'client_id' => $client_id,
+            'property_sales_id' => $id,
+        ])->sum('amount_paid') + (float) $incomingAmount;
+
+        // dedute total amount from amount
+        $ledgerTotalAmountRemaining = max(0, (float) $propertysale->amount - (float) $ledgerTotalAmountPaid);
+
+
+        dd($ledgerTotalAmountPaid);
+    }
+
 
     /**
      * Remove the specified resource from storage.
