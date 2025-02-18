@@ -22,6 +22,7 @@ class PropertySalesResource extends JsonResource
             'quantity' => $this->quantity,
             'amount' => $this->amount,
             'balance' => $this->balance(),
+            'ledger' => $this->ledger_summation,
             'initial_amount_paid' => $this->initial_amount_paid,
             'first_generation_commission' => $this->first_generation_commission,
             'second_generation_commission' => $this->second_generation_commission,
@@ -30,6 +31,7 @@ class PropertySalesResource extends JsonResource
             'second_generation' => new RealtorsResource($this->secondgen),
             'third_generation' => new RealtorsResource($this->thirdgen),
             'sponsor_code' => $this->sponsor_code,
+            'ledger_list' => ClientLedgerResponse::collection($this->ledgers),
         ];
     }
 }

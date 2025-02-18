@@ -1,3 +1,4 @@
+import ChartComponent from '@/Components/CustomCharts';
 import { MoneyFormat } from '@/Functions';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
@@ -31,13 +32,18 @@ export default function Dashboard({ ...pageData }) {
             { content: MoneyFormat({ amount: pageData.Unpaid }), label: 'UnPaid', className: 'bg-green-500 p-4 rounded-lg' },
             { content: MoneyFormat({ amount: pageData.paid }), label: 'Paid', className: 'bg-red-500 p-4 rounded-lg' },
             { content: pageData.totalRealtors, label: 'Total Realtors', className: 'bg-green-500 p-4 rounded-lg' },
-            { content: pageData.totalClients, label: 'Total Clients', className: 'bg-amber-500 p-4 rounded-lg' },
+
         ],
         [
             { content: MoneyFormat({ amount: pageData.totalCommission }), label: 'Total Commission', className: 'bg-amber-500 p-4 rounded-lg' },
             { content: MoneyFormat({ amount: pageData.sales }), label: 'Total Sales', className: 'bg-green-500 p-4 rounded-lg' },
             { content: pageData.totalProperty, label: 'Total Property', className: 'bg-red-500 p-4 rounded-lg' },
+
+        ],
+
+        [
             { content: pageData.referrals, label: 'Total Referrals', className: 'bg-green-500 p-4 rounded-lg' },
+            { content: pageData.totalClients, label: 'Total Clients', className: 'bg-amber-500 p-4 rounded-lg' },
         ],
     ];
 
@@ -63,13 +69,11 @@ export default function Dashboard({ ...pageData }) {
 
                             {/* full with */}
                             <div className="flex flex-wrap mt-8">
-                                <div class="w-2/3 ml-auto bg-gray-500 h-12"></div>
-                                <div class="w-1/3 mr-auto bg-gray-400 h-12"></div>
+                                <div className="w-full ml-auto bg-gray-500">
+                                    <ChartComponent />
+                                </div>
                             </div>
                             {/* full with */}
-
-
-
                         </div>
                     </div>
                 </div>

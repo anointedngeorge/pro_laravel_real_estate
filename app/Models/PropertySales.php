@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PropertySales extends Model
 {
+    protected $appends = ['ledger_list'];
     protected $fillable = [
         'property_id',
         'client_id',
@@ -74,10 +75,22 @@ class PropertySales extends Model
 
     public function balance()
     {
-        $balance = (int) $this->amount - (int) $this->initial_amount_paid;
-        return $balance;
-
+        return (float) $this->amount - (float) $this->ledger_summation;
     }
 
 
+
+
+    public function ledgers()
+    {
+        return $this->hasMany(ClientsLedger::class, 'property_sales_id');
+    }
+
+    /**
+     * Accessor to get the ledger list
+     */
+    public function getLedgerListAttribute()
+    {
+        return $this->ledgers()->get();
+    }
 }

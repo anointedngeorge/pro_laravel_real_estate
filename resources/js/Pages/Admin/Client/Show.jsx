@@ -4,7 +4,7 @@ import Modal from '@/Components/Modal';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { ViewData } from '@/Components/ViewData';
-import { MoneyFormat } from '@/Functions';
+import { DateStringFormat, MoneyFormat } from '@/Functions';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
@@ -55,7 +55,7 @@ const PayContent = ({ pagedata, closeModal = () => { } }) => {
     );
 }
 
-const HistoryContent = ({ pagedata, closeModal = () => { } }) => {
+const HistoryContent = ({ pagedata, closeModal = () => { }, ledgerList = [] }) => {
     return (
         <div>
             <div className='w-full p-2'>
@@ -69,8 +69,27 @@ const HistoryContent = ({ pagedata, closeModal = () => { } }) => {
                 </div>
 
                 <div className='flex flex-col gap-y-2 p-3'>
-                    <pre>{JSON.stringify(pagedata, undefined, 2)}</pre>
+                    <table className='w-auto'>
+                        <thead className='bg-slate-800 text-white p-2'>
+                            <tr>
+                                <td>Amount Paid</td>
+                                <td>Amount Reamaining</td>
+                                <td>Date</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {ledgerList.map((item, index) => (
+                                <tr key={`ledger_${index}`}>
+                                    <td>{item && MoneyFormat({ amount: item.amount_paid })}</td>
+                                    <td>{item && MoneyFormat({ amount: item.amount_remaining })}</td>
+                                    <td>{item && DateStringFormat({ date: item.created_at })}</td>
+                                </tr>
+
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
+
 
             </div>
 
@@ -85,11 +104,12 @@ const HistoryContent = ({ pagedata, closeModal = () => { } }) => {
 
 
 
-export default function show({ auth, client, properties }) {
+export default function show({ auth, client, properties, message }) {
 
     const [clxModal, setClxModal] = useState(false);
     const [pagedata, setPageData] = useState({});
     const [page, setPage] = useState('');
+    const [ledgerlist, setLedgerList] = useState([]);
 
     const closeModal = () => {
         let st = clxModal ? false : true;
@@ -114,7 +134,9 @@ export default function show({ auth, client, properties }) {
             <Head title={`View Client`} />
 
             <div className="py-12">
+
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    {message && <div className='bg-green-500 p-3 text-white'>{message.message}</div>}
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900 grid grid-cols-1">
                             <div>
@@ -124,6 +146,7 @@ export default function show({ auth, client, properties }) {
 
 
                         <div className="p-6 text-gray-900 grid grid-cols-1 mt-8">
+
                             <hr />
                             <div className='w-auto'>
                                 <h1 className='font-bold text-2xl'>Properties Purchased</h1>
@@ -133,8 +156,9 @@ export default function show({ auth, client, properties }) {
                                             <th>Property</th>
                                             <th>Plot Quantity</th>
 
-                                            <th>Initial Payment</th>
+                                            <th>Total Amount</th>
                                             <th>Balance</th>
+                                            <th>Total Paid</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -144,8 +168,9 @@ export default function show({ auth, client, properties }) {
                                                 <td className='text-red-600'>{property.property_id.name}</td>
                                                 <td>{property.quantity}</td>
 
-                                                <td>{MoneyFormat({ amount: property.initial_amount_paid })}</td>
+                                                <td>{MoneyFormat({ amount: property.amount })}</td>
                                                 <td>{MoneyFormat({ amount: property.balance })}</td>
+                                                <td>{MoneyFormat({ amount: property.ledger })}</td>
                                                 <td>
                                                     <div className='w-auto text-nowrap flex gap-x-1 '>
                                                         <button onClick={e => {
@@ -157,7 +182,9 @@ export default function show({ auth, client, properties }) {
                                                             setPageData(property)
                                                             setPage('history')
                                                             setClxModal(true);
+                                                            setLedgerList(property.ledger_list)
                                                         }} className='bg-orange-500 text-white px-4 py-1 rounded'>Histories</button>
+
                                                     </div>
                                                 </td>
                                             </tr>
@@ -172,7 +199,11 @@ export default function show({ auth, client, properties }) {
                                     {page === 'pay' ? (
                                         <PayContent pagedata={pagedata} closeModal={closeModal} />
                                     ) : page === 'history' ? (
-                                        <HistoryContent pagedata={pagedata} closeModal={closeModal} />
+                                        <HistoryContent
+                                            pagedata={pagedata}
+                                            closeModal={closeModal}
+                                            ledgerList={ledgerlist}
+                                        />
                                     ) : (
                                         <p>No content available</p>
                                     )}

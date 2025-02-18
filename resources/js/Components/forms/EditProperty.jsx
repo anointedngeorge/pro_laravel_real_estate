@@ -6,6 +6,8 @@ import TextInput from '@/Components/TextInput';
 import { router, useForm } from '@inertiajs/react';
 import PrimaryButton from '../PrimaryButton';
 import TextAreaInput from '../TextAreaInput';
+import CKEditorComponent from '../CKEditorComponent';
+
 
 
 
@@ -68,12 +70,18 @@ export function EditProperty({
                         htmlFor="description"
                         value="Description"
                     />
-                    <TextAreaInput
+                    {/*     <TextAreaInput
                         id="description"
                         name="description"
                         className="mt-1 block w-full"
                         onChange={(e) => setData("description", e.target.value)}
-                    >{data.description}</TextAreaInput>
+                    >{data.description}</TextAreaInput> */}
+
+                    <CKEditorComponent
+                        control={{ value: data.description, onChange: (value) => setData("description", value) }}
+                        name="description"
+                    />
+
                     <InputError message={errors.description} className="mt-2" />
                 </div>
             </div>

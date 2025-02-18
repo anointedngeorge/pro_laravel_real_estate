@@ -60,7 +60,7 @@ const TextForm = ({ setData, settings }) => {
                     <option value="Default"></option>
                     <option value="Wello">Wello</option>
                     <option value="Nero">Nero</option>
-                    <option value="real_estate">Real Estate</option>
+                    <option value="NeroUpgrade">Nero Upgrade</option>
                 </SelectInput>
             </div>
 
@@ -126,7 +126,7 @@ const ImageForm = ({ setData, settings }) => {
                     <label className='text-red-500'>Logo</label>
                     <TextInput className='w-full p-2' type='file' onChange={e => setData('logo', e.target.files[0])} />
                 </div>
-                
+
                 <div>
                     <picture>
                         <img src={settings['favicon'] ? `/storage/${settings['favicon']}` : "/images/logo.png"} alt="Favicon" style={{ width: '60px', height: '60px' }} />

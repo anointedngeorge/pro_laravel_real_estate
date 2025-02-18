@@ -6,6 +6,7 @@ use App\Events\PropertySaleEvent;
 use App\Http\Requests\StoreCommissionsRequest;
 use App\Http\Requests\StorePropertySalesRequest;
 use App\Http\Requests\UpdatePropertySalesRequest;
+use App\Http\Resources\ClientLedgerResponse;
 use App\Http\Resources\ClientResource;
 use App\Http\Resources\PropertyBlockPlotsResource;
 use App\Http\Resources\PropertyBlockResource;
@@ -68,6 +69,7 @@ class PropertySalesController extends Controller
     public function store(StorePropertySalesRequest $request)
     {
         $data = $request->validated();
+      
         // dd($request);
         $initial_amount = (float) $data['initial_amount_paid'];
         $amount = (float) $data['amount'];
@@ -154,20 +156,74 @@ class PropertySalesController extends Controller
     }
     public function PropertySalesLedger(Requests $request, PropertySales $propertysale)
     {
-        $incomingAmount = $request->input('amount_paid');
+        $amount_to_pay = (float) $request->input('amount_paid');
         $client_id = $propertysale->client_id;
         $amount = $propertysale->amount;
+        // 
         $id = $propertysale->id;
+        // summation of all ledger amount  paid
         $ledgerTotalAmountPaid = (float) ClientsLedger::where([
             'client_id' => $client_id,
             'property_sales_id' => $id,
-        ])->sum('amount_paid') + (float) $incomingAmount;
-
-        // dedute total amount from amount
-        $ledgerTotalAmountRemaining = max(0, (float) $propertysale->amount - (float) $ledgerTotalAmountPaid);
+        ])->sum('amount_paid') + (float) $amount_to_pay;
 
 
-        dd($ledgerTotalAmountPaid);
+        // dedot total amount from amount, and save it to the property_sales table
+        $ledgerTotalAmountRemaining = max(0, (float) $amount - (float) $ledgerTotalAmountPaid);
+        $first_commission = (int) $propertysale->first_generation_commission / 100 * (float) $amount_to_pay;
+        $second_commission = (int) $propertysale->second_generation_commission / 100 * (float) $amount_to_pay;
+        $third_commission = (int) $propertysale->third_generation_commission / 100 * (float) $amount_to_pay;
+
+        ClientsLedger::create([
+            'client_id' => $client_id,
+            'property_sales_id' => $id,
+            'amount_paid' => $amount_to_pay,
+            'amount_remaining' => $ledgerTotalAmountRemaining,
+            'first_commission' => $first_commission,
+            'second_commission' => $second_commission,
+            'third_commission' => $third_commission,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+
+        // Save updated ledger total
+        $propertysale->ledger_summation = $ledgerTotalAmountPaid;
+        $propertysale->save();
+
+        // register for the commissions
+        Commissions::create([
+            'propertysales_id' => $id,
+            'client_id' => $client_id,
+            'first_generation_commission' => $first_commission,
+            'second_generation_commission' => $second_commission,
+            'third_generation_commission' => $third_commission,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        session()->flash('message', [
+            'type' => 'success',
+            'message' => 'Payment updated!',
+        ]);
+
+        return redirect()->route('client.show', $client_id);
+    }
+
+
+    public function showPropertySalesLedger(PropertySales $propertysale, Client $client)
+    {
+        $ledger = ClientsLedger::where('client_id', $client->id)
+            ->where('property_sales_id', $propertysale->id)
+            ->get();
+
+        $ledgerResponse = ClientLedgerResponse::collection($ledger);
+
+        $response = response()->json([
+            'data' => $ledgerResponse,
+        ], 201);
+
+        return $response;
     }
 
 

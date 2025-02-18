@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateClientRequest;
 use App\Http\Resources\ClientResource;
 use App\Http\Resources\PropertySalesResource;
 use App\Models\Client;
+use App\Models\PropertySales;
 use Request;
 
 class ClientController extends Controller
@@ -51,9 +52,11 @@ class ClientController extends Controller
      */
     public function show(Client $client)
     {
+
         return inertia('Admin/Client/Show', [
             'client' => new ClientResource($client),
-            'properties' => PropertySalesResource::collection($client->propertySales)
+            'properties' => PropertySalesResource::collection($client->propertySales),
+            'message' => Session('message'),
         ]);
     }
 

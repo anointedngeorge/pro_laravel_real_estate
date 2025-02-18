@@ -61,6 +61,12 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         'PropertySalesLedger'
     ])->name('propertysales.ledger');
 
+    Route::get('/propertysales/ledger/{propertysale}/{client}', [
+        PropertySalesController::class,
+        'showPropertySalesLedger'
+    ])->name('propertysales.showledger');
+
+
     Route::resource('/settings', SettingsController::class);
 
     // 
