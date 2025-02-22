@@ -3,6 +3,7 @@ import FrontendLayout from "./FrontendLayout";
 import SliderImages from "./NeroUpgradeComponents/SLider";
 import Realtors from "./NeroUpgradeComponents/Realtors";
 import ServiceExperience from "./NeroUpgradeComponents/ServieExprience";
+import { Properties } from "./NeroUpgradeComponents/Properties";
 
 
 export default function Index({ website }) {
@@ -182,90 +183,7 @@ export default function Index({ website }) {
 
                 {/*histry-summery end start */}
                 {/*popular-services area start */}
-                <section className="popular-services pt-110 pb-90 gry-bg">
-                    <div className="container">
-                        <div className="row justify-content-center">
-                            <div className="col-xxl-10">
-                                <div className="section_title_wrapper text-center mb-50 wow fadeInUp" data-wow-delay="0.3s">
-                                    <span className="subtitle price-sb-title">
-                                        Popular service
-                                    </span>
-                                    <h2 className="section-title section-title-black">
-                                        Our  Popular service
-                                    </h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-xl-4 col-lg-4 col-md-6">
-                                <div className="popular__services mb-30 wow fadeInUp" data-wow-delay="0.3s">
-                                    <div className="popular__services-thumb p-relative">
-                                        <img src="../neroupgrade/img/popular-service/pp-service-1.jpg" alt="img not found" />
-                                        <div className="popular__services-thumb-title">
-                                            <h5><a href="service-details.html">Mechanical Works</a></h5>
-                                        </div>
-                                        <div className="popular__services-thumb-text text-center">
-                                            <div className="popular__services-thumb-text-icon mb-30">
-                                                <a href="service-details.html"><i className="flaticon-robot-arm" /></a>
-                                            </div>
-                                            <div className="popular__services-thumb-text-content transition-3">
-                                                <h3 className="services__title"><a href="service-details.html">Mechanical Works</a></h3>
-                                                <p>luctus aenean nascetur neque and pedeco lobortis pulvinar</p>
-                                                <div className="popular__services-thumb-text-button">
-                                                    <a href="service-details.html">Read More</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-xl-4 col-lg-4 col-md-6">
-                                <div className="popular__services mb-30 wow fadeInUp" data-wow-delay="0.6s">
-                                    <div className="popular__services-thumb p-relative">
-                                        <img src="../neroupgrade/img/popular-service/pp-service.jpg" alt="img not found" />
-                                        <div className="popular__services-thumb-title">
-                                            <h5><a href="service-details.html">Civil Engineering</a></h5>
-                                        </div>
-                                        <div className="popular__services-thumb-text text-center">
-                                            <div className="popular__services-thumb-text-icon mb-30">
-                                                <a href="service-details.html"><i className="flaticon-engineer" /></a>
-                                            </div>
-                                            <div className="popular__services-thumb-text-content transition-3">
-                                                <h3 className="services__title"><a href="service-details.html">Civil Engineering</a></h3>
-                                                <p>neque and pedeco lobortis pulvinar  luctus aenean nascetur </p>
-                                                <div className="popular__services-thumb-text-button">
-                                                    <a href="service-details.html">Read More</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-xl-4 col-lg-4 col-md-6">
-                                <div className="popular__services mb-30 wow fadeInUp" data-wow-delay="0.9s">
-                                    <div className="popular__services-thumb p-relative">
-                                        <img src="../neroupgrade/img/popular-service/pp-service-2.jpg" alt="img not found" />
-                                        <div className="popular__services-thumb-title">
-                                            <h5><a href="service-details.html">CHEMICAL INDUSTRY</a></h5>
-                                        </div>
-                                        <div className="popular__services-thumb-text text-center">
-                                            <div className="popular__services-thumb-text-icon mb-30">
-                                                <a href="service-details.html"><i className="flaticon-oil" /></a>
-                                            </div>
-                                            <div className="popular__services-thumb-text-content transition-3">
-                                                <h3 className="services__title"><a href="service-details.html">CHEMICAL INDUSTRY</a></h3>
-                                                <p>lobortis neque and pedeco  pulvinar  luctus aenean nascetur</p>
-                                                <div className="popular__services-thumb-text-button">
-                                                    <a href="service-details.html">Read More</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                <Properties />
                 {/*popular-services area end */}
                 {/*recent project area start here */}
                 <Realtors />

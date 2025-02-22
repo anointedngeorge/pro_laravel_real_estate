@@ -34,6 +34,11 @@ class Property extends Model
         )->distinct(); // Ensures unique clients
     }
 
-   
+
+    public function media_files()
+    {
+        return $this->hasMany(PropertyMedia::class, 'property_id');
+    }
+
 
 }

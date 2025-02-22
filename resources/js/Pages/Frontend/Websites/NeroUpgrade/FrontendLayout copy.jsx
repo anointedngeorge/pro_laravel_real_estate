@@ -1,7 +1,7 @@
 import '../../../../../css/app.css';
 // import './bootstrap';
 
-import { Head, Link } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import { NeroAside } from "./Navigation";
 import { NeroLogo } from "./Logo";
@@ -119,21 +119,44 @@ export default function FrontendLayout({ children, assetmodules = {}, title = 'N
                                 <div className="main-menu main-menu-3 d-none d-lg-block" id="white-menu">
                                     <nav id="mobile-menu">
                                         <ul>
-
                                             <li className="has-dropdown">
-                                                <Link href={route('frontend.index')}>Home</Link>
+                                                <a href="index.html">Home <i className="far fa-plus" /> </a>
+                                                <ul className="submenu">
+                                                    <li><a href="index.html">Home 01</a></li>
+                                                    <li><a href="index-2.html">Home 02</a></li>
+                                                </ul>
                                             </li>
                                             <li className="has-dropdown">
-                                                <Link href={route('frontend.page', 'about')}>About</Link>
+                                                <a href="#">Pages <i className="far fa-plus" /></a>
+                                                <ul className="submenu">
+                                                    <li><a href="about.html">About Us</a></li>
+                                                    <li><a href="team.html">Team</a></li>
+                                                    <li><a href="team-details.html">Team Details</a></li>
+                                                </ul>
                                             </li>
                                             <li className="has-dropdown">
-                                                <Link href={route('frontend.page', 'properties')}>Properties</Link>
+                                                <a href="services.html">Services <i className="far fa-plus" /></a>
+                                                <ul className="submenu">
+                                                    <li><a href="services.html">Services</a></li>
+                                                    <li><a href="service-details.html">Service Details</a></li>
+                                                </ul>
                                             </li>
                                             <li className="has-dropdown">
-                                                <Link href={route('frontend.page', 'properties')}>Realtors</Link>
+                                                <a href="project.html">Projects <i className="far fa-plus" /></a>
+                                                <ul className="submenu">
+                                                    <li><a href="project.html">Projects</a></li>
+                                                    <li><a href="project-details.html">Project Details</a></li>
+                                                </ul>
                                             </li>
                                             <li className="has-dropdown">
-                                                <Link href={route('frontend.page', 'properties')}>Contact</Link>
+                                                <a href="blog.html">Blog <i className="far fa-plus" /></a>
+                                                <ul className="submenu">
+                                                    <li><a href="blog.html">Blog</a></li>
+                                                    <li><a href="blog-details.html">Blog Details</a></li>
+                                                </ul>
+                                            </li>
+                                            <li className="has-dropdown">
+                                                <a href="contact.html">Contact</a>
                                             </li>
                                         </ul>
                                     </nav>

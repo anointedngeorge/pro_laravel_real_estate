@@ -2148,7 +2148,9 @@ select {
   left: 0;
   right: 0;
   z-index: 999;
-  border: 1px solid #414446;
+  background-color: #1D1E22;
+  color: #fff;
+  /* border: 1px solid #414446; */
 }
 
 .header-top {
@@ -2278,7 +2280,7 @@ select {
   text-align: left;
   position: absolute;
   min-width: 250px;
-  background: #ffffff;
+  background: #000000;
   padding: 15px 0;
   top: 120%;
   z-index: 10;
@@ -2385,7 +2387,7 @@ select {
 .mean-container .mean-bar {
   padding: 0;
   min-height: auto;
-  background: none;
+  background: inherit;
 }
 
 .mean-container .mean-nav > ul {

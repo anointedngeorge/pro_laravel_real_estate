@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdatePropertyRequest extends FormRequest
+class UpdatePropertyMediaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,10 +22,7 @@ class UpdatePropertyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'quantity' => ['required', 'integer'],
-            'name' => ['required', 'string'],
-            'description' => ['nullable', 'string'],
-            'image' => ['nullable', 'file', 'image', 'mimes:png,jpg,jpeg', 'max:2048'],
+            //
         ];
     }
 }

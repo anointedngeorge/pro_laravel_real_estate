@@ -1,7 +1,7 @@
 
 import { CreateRealtor } from '@/Components/forms/CreateRealtor';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 
 
 
@@ -9,6 +9,8 @@ import { Head, Link } from '@inertiajs/react';
 
 
 export default function edit({ auth }) {
+
+    const { settings } = usePage().props;
 
     return (
         <AuthenticatedLayout
@@ -25,7 +27,7 @@ export default function edit({ auth }) {
             }
         >
             <Head title={`Realtors`} />
-
+           
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">

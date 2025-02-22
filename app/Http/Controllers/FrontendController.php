@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Events\RealtorsReferralProcess;
 use App\Http\Requests\StoreRealtorsRequest;
+use App\Http\Resources\PropertyResource;
 use App\Http\Resources\RealtorsResource;
+use App\Models\Property;
 use App\Models\Realtors;
 use App\Models\Settings;
 use Illuminate\Http\Request;
@@ -36,6 +38,60 @@ class FrontendController extends Controller
         ]);
     }
 
+
+    private function settings($search)
+    {
+        return Settings::where('name', $search)->value('description') ?: '...';
+    }
+
+    public function pages($pagename)
+    {
+        $website = $this->settings('website') ?: 'Default';
+        $query = Request()->query();
+
+
+        // properties
+        $page_query = $query['page'] ?? 10;
+        $properties = Property::query()->orderBy('created_at', 'desc')->paginate($page_query);
+
+        try {
+            $credentials = [
+                "about" => [
+                    'title' => "About us | {$this->settings('title')}",
+                    'content' => $this->settings('about')
+                ],
+
+                "properties" => [
+                    'title' => "List Properties | {$this->settings('title')}",
+                    'contents' => PropertyResource::collection($properties)
+                ],
+                // another page
+            ];
+            $found_data = $credentials[$pagename];
+            // dd($found_data);
+            $ucfirst = ucfirst($pagename);
+            return inertia("Frontend/Websites/{$website}/{$ucfirst}", [
+                "data" => $found_data
+            ]);
+        } catch (\Throwable $th) {
+            return to_route('frontend.index');
+        }
+    }
+
+    public function property(Property $property)
+    {
+        $website = $this->settings('website') ?: 'Default';
+
+        try {
+            $properties = Property::query()->orderBy('created_at', 'desc')->paginate(10);
+            return inertia("Frontend/Websites/{$website}/Property", [
+                "property" => new PropertyResource($property),
+                'properties' => $properties,
+            ]);
+        } catch (\Throwable $th) {
+            return to_route('frontend.index');
+        }
+    }
 
     // register referrals
     public function realtorReferrals(StoreRealtorsRequest $request)

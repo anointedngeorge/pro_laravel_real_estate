@@ -108,8 +108,8 @@ export default function show({ auth, client, properties, message }) {
 
     const [clxModal, setClxModal] = useState(false);
     const [pagedata, setPageData] = useState({});
-    const [page, setPage] = useState('');
     const [ledgerlist, setLedgerList] = useState([]);
+    const [page, setPage] = useState('');
 
     const closeModal = () => {
         let st = clxModal ? false : true;

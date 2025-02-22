@@ -69,7 +69,7 @@ class PropertySalesController extends Controller
     public function store(StorePropertySalesRequest $request)
     {
         $data = $request->validated();
-      
+
         // dd($request);
         $initial_amount = (float) $data['initial_amount_paid'];
         $amount = (float) $data['amount'];

@@ -1,10 +1,11 @@
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import TextInput from '@/Components/TextInput';
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import PrimaryButton from '../PrimaryButton';
 import SelectInput from '../SelectInput';
 import TextAreaInput from '../TextAreaInput';
+import { useEffect } from 'react';
 
 export function CreateRealtor() {
     const { data, setData, post, errors, processing } = useForm({
@@ -20,10 +21,16 @@ export function CreateRealtor() {
 
     });
 
+    const { settings } = usePage().props;
+
     const onFormSubmit = (e) => {
         e.preventDefault();
         post(route('realtors.store'));
     };
+
+    useEffect(() => {
+        setData('sponsor_code', settings.sponsor_code)
+    }, [settings])
 
     // Define dynamic form structure with various field types
     const prepareForm = [

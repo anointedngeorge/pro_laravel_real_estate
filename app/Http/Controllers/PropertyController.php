@@ -12,8 +12,12 @@ use App\Http\Resources\PropertySalesResource;
 use App\Models\Property;
 use App\Models\PropertyBlockPlots;
 use App\Models\PropertyBlocks;
-use Request;
+use App\Models\PropertyMedia;
+use Illuminate\Http\Request;
+use Request as CREQUEST;
+use Session;
 use Storage;
+use Str;
 
 class PropertyController extends Controller
 {
@@ -22,11 +26,13 @@ class PropertyController extends Controller
      */
     public function index()
     {
-        $queryParams = Request::query();
+        $queryParams = CREQUEST::query();
 
 
         $limit = Request('limit') ?? 10;
-        $query = Property::query()->paginate(perPage: $limit);
+        $query = Property::query()
+            ->orderBy('created_at', 'desc')
+            ->paginate(perPage: $limit)->onEachSide(1);
 
         // 
         return inertia('Admin/Property/Index', [
@@ -41,7 +47,9 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        
+        return inertia('Admin/Property/Create', [
+            'message' => Session('message')
+        ]);
     }
 
     /**
@@ -49,7 +57,28 @@ class PropertyController extends Controller
      */
     public function store(StorePropertyRequest $request)
     {
-        //
+        try {
+            $data = $request->validated();
+            // dd($data);
+            $image = $data['image'] ?? null;
+            // 
+            if ($image) {
+                $data['image_path'] = $image->store('properties/' . Str::random(), 'public');
+            }
+            // sessions
+            Property::create($data);
+            session()->flash('type', 'success');
+            session()->flash('message', 'Property updated!');
+            // 
+            return to_route('property.index');
+        } catch (\Throwable $th) {
+
+            session()->flash('type', 'error');
+            session()->flash('message', 'Failed to create.');
+            // 
+            return to_route('property.create');
+        }
+
     }
 
     /**
@@ -89,13 +118,24 @@ class PropertyController extends Controller
     {
 
         $data = $request->validated();
+        // dd($data);
+        // dd($data);
         $name = $property->name;
         // remove file if it exists
         if ($property->image_path) {
             Storage::disk('public')->deleteDirectory(dirname($property->image_path));
         }
 
+        $image = $data['image'] ?? null;
+
+        // 
+        if ($image) {
+            $data['image_path'] = $image->store('properties/' . Str::random(), 'public');
+        }
+
         $property->update($data);
+
+        session()->flash('message', 'Updated.');
         return to_route('property.index')->with('message', "Property $name was updated");
         ;
     }
@@ -156,4 +196,35 @@ class PropertyController extends Controller
     }
 
 
+
+    // 
+
+    public function propertymedia(Request $request, Property $property)
+    {
+        $data = $request->validate([
+            'media' => ['file', 'mimes:png,jpg,jpeg,pdf,docx,doc', 'max:2048'],
+            'type' => ['string'],
+            'property_id' => ['string'],
+        ]);
+        $image = $data['media'];
+
+
+        if ($image) {
+            $data['media_path'] = $image->store('propertymedia/' . Str::random(), 'public');
+        }
+
+        PropertyMedia::create($data);
+        Session()->flash('message', 'media file created');
+    }
+
+
+    public function propertyStatus(Property $property, $status)
+    {
+
+        // dd([$property, $status]);
+        Property::where('id', $property->id)->update([
+            'property_status' => $status,
+        ]);
+        Session()->flash('message', "Property status changed to ({$status})");
+    }
 }

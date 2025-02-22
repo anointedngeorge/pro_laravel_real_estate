@@ -46,6 +46,18 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->group(function () 
         [PropertyController::class, 'propertyBlocks']
     )->name('property.blocks');
     // 
+    Route::post(
+        '/property/media/{property}',
+        [PropertyController::class, 'propertymedia']
+    )->name('property.media');
+
+    Route::put(
+        '/property/availability/{property}/{status}',
+        [PropertyController::class, 'propertyStatus']
+    )->name('property.availability');
+
+
+    // 
     Route::resource('/branch', BranchController::class);
     Route::resource('/client', ClientController::class);
     Route::resource('dashboard/realtors', RealtorsController::class);
@@ -136,3 +148,16 @@ Route::get('/realtors/referrals/confirmation', [
     FrontendController::class,
     'Confirmation'
 ])->name('frontend.confirmation');
+
+
+
+Route::get('/{pagename}', [
+    FrontendController::class,
+    'pages'
+])->name('frontend.page');
+
+
+Route::get('/property/{property}', [
+    FrontendController::class,
+    'property'
+])->name('frontend.property');

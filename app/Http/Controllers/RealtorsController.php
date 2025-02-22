@@ -26,8 +26,6 @@ class RealtorsController extends Controller
         $query = Realtors::query()
             ->orderBy('id', 'desc')
             ->paginate(perPage: $limit)->onEachSide(1);
-        ;
-
         // 
         return inertia('Admin/Realtors/Index', [
             'realtors' => RealtorsResource::collection($query),

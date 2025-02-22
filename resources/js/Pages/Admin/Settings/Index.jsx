@@ -1,3 +1,4 @@
+import { TinyMCEEditor } from '@/Components/CKEditorComponent';
 import { Editbranch } from '@/Components/forms/Editbranch';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -10,10 +11,33 @@ import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
 
 
+const AboutContent = ({ setData, settings }) => {
+    return (
+        <div className='w-full mt-6'>
+            <div>
+                <InputLabel
+                    htmlFor="about"
+                    value="About us"
+                />
+                <TinyMCEEditor
+                    id="about"
+                    name="about"
+                    className="mt-1 block w-full h-dvh"
+                    value={settings.about}
+                    onChange={(e) => setData("about", e)}
+                />
+            </div>
+        </div>
+    );
+}
 
 const TextForm = ({ setData, settings }) => {
     return (
         <div className='mb-4 grid grid-cols-1 gap-x-4 gap-y-4'>
+            <div>
+                <label className='text-red-500'>Company Sponsor Code</label>
+                <TextInput className='w-full p-2' type='text' defaultValue={settings['sponsor_code']} onChange={e => setData('sponsor_code', e.target.value)} />
+            </div>
             <div>
                 <label className='text-red-500'>Title</label>
                 <TextInput className='w-full p-2' type='text' defaultValue={settings['title']} onChange={e => setData('title', e.target.value)} />
@@ -194,6 +218,8 @@ export default function index({ auth, settings_data }) {
                                 <SocialsForm setData={setData} settings={pagesettings} />
                                 <h3 className='text-white mb-3 mt-3 font-bold bg-slate-600 p-3'>Logo/Favicons</h3>
                                 <ImageForm setData={setData} settings={pagesettings} />
+
+                                <AboutContent setData={setData} settings={pagesettings} />
                                 <PrimaryButton>Update Settings</PrimaryButton>
                             </form>
 

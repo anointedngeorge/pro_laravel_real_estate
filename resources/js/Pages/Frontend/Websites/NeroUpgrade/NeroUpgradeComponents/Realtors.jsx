@@ -6,6 +6,18 @@ export default function Realtors() {
         <div className="recent-project-area theme-bg p-relative pt-120 pb-55 fix">
 
             <div className="custom-container">
+                <div className="row justify-content-center">
+                    <div className="col-xxl-10">
+                        <div className="section_title_wrapper text-center mb-50 wow fadeInUp" data-wow-delay="0.3s">
+                            <span className="subtitle price-sb-title">
+                                Verified Realtors
+                            </span>
+                            <h2 className="section-title section-title-black">
+                                Our Realtors
+                            </h2>
+                        </div>
+                    </div>
+                </div>
                 <div className="row">
 
                     <div className="col-xxl-8">

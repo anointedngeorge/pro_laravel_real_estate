@@ -19,7 +19,7 @@ export default function edit({ auth, property }) {
 
                     </h2>
 
-                    <Link className='px-2 py-2 rounded items-center hover:bg-green-600 bg-green-500 text-white' href={route('property.index')}>Property</Link>
+                    <Link className='px-2 py-2 rounded items-center hover:bg-green-600 bg-green-500 text-white' href={route('property.create')}>Add New Property</Link>
 
                 </div>
             }

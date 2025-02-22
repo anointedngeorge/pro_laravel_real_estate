@@ -332,10 +332,16 @@ export default function show({ auth, property, message, propertyBlocks, property
                         <div className="p-6 text-gray-900 grid grid-cols-1">
 
                             <div>
+                                <div className='w-54'>
+                                    <img src={`/storage/${property.image_path}`} alt=".." />
+                                </div>
                                 <ViewData
                                     objects={property}
-                                    exclude='id'
+                                    exclude='id, description, media_files,image_path'
                                 />
+
+                                <div className='mt-8 mb-8 p-3 bg-slake-300 shadow shadow-lg' dangerouslySetInnerHTML={{ __html: property.description }}></div>
+
                             </div>
                         </div>
                         {/* create new blocks */}
